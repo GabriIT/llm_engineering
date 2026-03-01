@@ -1,0 +1,4 @@
+interface:
+  display_name: "Parsing Output Guardian"
+  short_description: "Validate and secure RAG parsing output"
+  default_prompt: "Use $parsing-output-guardian to run parser audit, OCR-aware validation, and JSONL chunk export checks."
