@@ -222,3 +222,72 @@ bash myRAG_app/skills/parsing-output-guardian/scripts/query_vectorstore.sh \
 `/tmp/myrag_chunks.jsonl`
 3. Local Chroma persist directory:
 `/home/gabri/udemy/llm_engineering/myRAG_app/vector_db`
+
+## TypeScript UI + API (Multi-Thread Chat)
+This app now includes:
+1. A FastAPI backend for RAG queries:
+`myRAG_app/api`
+2. A React + Vite + TypeScript frontend:
+`myRAG_app/ui`
+3. Local pseudo-auth + per-user local thread persistence.
+
+### API Endpoints
+1. `GET /api/health`
+Returns:
+- `status`
+- `collection`
+- `db_path`
+2. `POST /api/rag/query`
+Body:
+- `question`
+- `history` (optional)
+- `retrieval` (optional: `k`, `search_type`, `fetch_k`, `lambda_mult`, `doc_type`, `source_contains`)
+Returns:
+- `answer`
+- `sources`
+- `meta`
+
+### Install Dependencies
+From repo root:
+```bash
+uv pip install --python .venv/bin/python fastapi uvicorn
+```
+
+Frontend install:
+```bash
+cd /home/gabri/udemy/llm_engineering/myRAG_app/ui
+npm install
+```
+
+### Run Backend API
+From repo root:
+```bash
+.venv/bin/python -m myRAG_app.api.server --host 0.0.0.0 --port 8000
+```
+
+### Run Frontend UI
+From `myRAG_app/ui`:
+```bash
+echo "VITE_API_BASE_URL=http://localhost:8000" > .env.local
+npm run dev
+```
+
+### Run Tests
+Backend tests:
+```bash
+cd /home/gabri/udemy/llm_engineering
+.venv/bin/python -m unittest discover -s myRAG_app/tests -p 'test_*.py' -v
+```
+
+Frontend tests:
+```bash
+cd /home/gabri/udemy/llm_engineering/myRAG_app/ui
+npm run test:run
+```
+
+### UI Behavior Summary
+1. Register/login with local pseudo-auth (`localStorage` only).
+2. Left sidebar lists previous threads for current user.
+3. Main pane shows full multi-turn conversation for selected thread.
+4. Sending a query calls backend and appends assistant reply with source list.
+5. Refreshing the browser preserves user threads by username.

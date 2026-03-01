@@ -213,3 +213,9 @@ week6/*/*.jsonl
 week6/*.pth
 week6/*.joblib
 week8/*.pth
+
+# Node / Vite
+node_modules/
+myRAG_app/ui/dist/
+myRAG_app/ui/coverage/
+*.tsbuildinfo

@@ -1,0 +1,70 @@
+import { useState } from "react";
+
+import { AuthPanel } from "./components/AuthPanel";
+import { QueryComposer } from "./components/QueryComposer";
+import { ThreadSidebar } from "./components/ThreadSidebar";
+import { ThreadView } from "./components/ThreadView";
+import { useAuth } from "./hooks/useAuth";
+import { useThreads } from "./hooks/useThreads";
+
+export default function App() {
+  const { currentUser, register, login, logout } = useAuth();
+  const {
+    threads,
+    activeThread,
+    activeThreadId,
+    storageWarning,
+    isSending,
+    createThread,
+    selectThread,
+    sendQuery,
+  } = useThreads(currentUser);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+  if (!currentUser) {
+    return <AuthPanel onRegister={register} onLogin={login} />;
+  }
+
+  return (
+    <div className="app-shell">
+      <ThreadSidebar
+        username={currentUser}
+        threads={threads}
+        activeThreadId={activeThreadId}
+        mobileOpen={mobileSidebarOpen}
+        onToggleMobile={() => setMobileSidebarOpen((open) => !open)}
+        onCreateThread={() => {
+          createThread();
+          setMobileSidebarOpen(false);
+        }}
+        onSelectThread={(threadId) => {
+          selectThread(threadId);
+          setMobileSidebarOpen(false);
+        }}
+        onLogout={logout}
+      />
+
+      <main className="chat-main">
+        <header className="chat-header">
+          <button
+            type="button"
+            className="mobile-only"
+            onClick={() => setMobileSidebarOpen((open) => !open)}
+          >
+            Threads
+          </button>
+          <div>
+            <h1>{activeThread?.title ?? "myRAG Chat"}</h1>
+            <p>Multi-turn RAG assistant with local pseudo-auth and thread history.</p>
+          </div>
+        </header>
+
+        {storageWarning ? <div className="warning-banner">{storageWarning}</div> : null}
+
+        <ThreadView thread={activeThread} />
+
+        <QueryComposer disabled={!currentUser} isSending={isSending} onSend={sendQuery} />
+      </main>
+    </div>
+  );
+}
