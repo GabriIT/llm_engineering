@@ -14,4 +14,3 @@ __all__ = [
     "print_parse_summary",
     "write_parse_report",
 ]
-

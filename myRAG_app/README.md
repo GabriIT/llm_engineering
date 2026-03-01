@@ -215,6 +215,35 @@ bash myRAG_app/skills/parsing-output-guardian/scripts/query_vectorstore.sh \
   --source-contains "LBV-50H"
 ```
 
+## Folder-Level Markdown Export Skill
+Skill location:
+`myRAG_app/skills/folder-markdown-exporter`
+
+Use this skill to export parsed knowledge into one markdown file per top-level folder in `myRAG_knowledge`.
+
+### Export command
+```bash
+bash myRAG_app/skills/folder-markdown-exporter/scripts/export_folder_markdown.sh \
+  --knowledge-root /home/gabri/udemy/llm_engineering/myRAG_knowledge \
+  --output-dir /home/gabri/udemy/llm_engineering/myRAG_app/markdown_knowledge \
+  --report-path /tmp/myrag_markdown_export_report.json
+```
+
+### Strict export command
+```bash
+bash myRAG_app/skills/folder-markdown-exporter/scripts/export_folder_markdown.sh \
+  --knowledge-root /home/gabri/udemy/llm_engineering/myRAG_knowledge \
+  --output-dir /home/gabri/udemy/llm_engineering/myRAG_app/markdown_knowledge \
+  --report-path /tmp/myrag_markdown_export_report.json \
+  --strict
+```
+
+### Export outputs
+1. Markdown files:
+`/home/gabri/udemy/llm_engineering/myRAG_app/markdown_knowledge/*.md`
+2. Export report:
+`/tmp/myrag_markdown_export_report.json`
+
 ## Output Files
 1. Parse audit report:
 `/tmp/myrag_parse_report.json`

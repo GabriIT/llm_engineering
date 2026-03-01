@@ -1,0 +1,4 @@
+interface:
+  display_name: "Folder Markdown Exporter"
+  short_description: "Export parsed knowledge to folder-level markdown"
+  default_prompt: "Use $folder-markdown-exporter to export parsed myRAG knowledge into one markdown file per top-level folder and produce a failure-aware report."
