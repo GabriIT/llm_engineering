@@ -26,18 +26,27 @@ from myRAG_app.vector.config import (
 )
 
 
-ALLOWED_ORIGINS = [
+DEFAULT_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
 
 
+def _allowed_origins_from_env() -> list[str]:
+    raw = os.getenv("MYRAG_ALLOWED_ORIGINS", "")
+    if not raw.strip():
+        return DEFAULT_ALLOWED_ORIGINS
+    origins = [item.strip() for item in raw.split(",") if item.strip()]
+    return origins or DEFAULT_ALLOWED_ORIGINS
+
+
 def create_app() -> FastAPI:
     app = FastAPI(title="myRAG API", version="0.1.0")
+    allowed_origins = _allowed_origins_from_env()
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=ALLOWED_ORIGINS,
+        allow_origins=allowed_origins,
         allow_credentials=False,
         allow_methods=["*"],
         allow_headers=["*"],

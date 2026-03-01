@@ -23,18 +23,22 @@ export function AuthPanel({ onRegister, onLogin }: AuthPanelProps) {
     setBusy(true);
     setFeedback(null);
 
-    const action = mode === "register" ? onRegister : onLogin;
-    const result = await action(username, password);
-    setFeedback(result.message);
+    try {
+      const action = mode === "register" ? onRegister : onLogin;
+      const result = await action(username, password);
+      setFeedback(result.message);
 
-    if (!result.ok) {
+      if (!result.ok) {
+        return;
+      }
+
+      setUsername("");
+      setPassword("");
+    } catch {
+      setFeedback("Authentication failed unexpectedly. Please retry.");
+    } finally {
       setBusy(false);
-      return;
     }
-
-    setUsername("");
-    setPassword("");
-    setBusy(false);
   }
 
   return (

@@ -1,0 +1,16 @@
+# Add inside the existing site block for 154.12.245.254 (or equivalent host).
+
+@ragmat_root path /RAG-mat
+redir @ragmat_root /RAG-mat/ 302
+
+@ragmat_api path /RAG-mat/api/*
+handle @ragmat_api {
+    uri strip_prefix /RAG-mat
+    reverse_proxy 127.0.0.1:18000
+}
+
+@ragmat_ui path /RAG-mat/*
+handle @ragmat_ui {
+    uri strip_prefix /RAG-mat
+    reverse_proxy 127.0.0.1:18001
+}

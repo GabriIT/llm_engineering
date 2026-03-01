@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+
+KNOWLEDGE_ROOT=""
+DB_PATH=""
+COLLECTION="myrag_docs"
+PYTHON_BIN=""
+REPORT_DIR="/tmp/myrag_deploy_reports"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --knowledge-root)
+      KNOWLEDGE_ROOT="$2"
+      shift 2
+      ;;
+    --db-path)
+      DB_PATH="$2"
+      shift 2
+      ;;
+    --collection)
+      COLLECTION="$2"
+      shift 2
+      ;;
+    --python-bin)
+      PYTHON_BIN="$2"
+      shift 2
+      ;;
+    --report-dir)
+      REPORT_DIR="$2"
+      shift 2
+      ;;
+    -h|--help)
+      cat <<USAGE
+Usage: build_vector_db_vps.sh --knowledge-root PATH --db-path PATH [options]
+  --collection NAME      Chroma collection (default: myrag_docs)
+  --python-bin PATH      Python interpreter (default: .venv/bin/python then python3)
+  --report-dir PATH      Directory for parser/ingest reports
+USAGE
+      exit 0
+      ;;
+    *)
+      echo "Unknown arg: $1" >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ -z "$KNOWLEDGE_ROOT" || -z "$DB_PATH" ]]; then
+  echo "--knowledge-root and --db-path are required" >&2
+  exit 2
+fi
+
+if [[ -z "$PYTHON_BIN" ]]; then
+  if [[ -x "$REPO_ROOT/.venv/bin/python" ]]; then
+    PYTHON_BIN="$REPO_ROOT/.venv/bin/python"
+  else
+    PYTHON_BIN="python3"
+  fi
+fi
+
+if [[ ! -x "$PYTHON_BIN" ]] && ! command -v "$PYTHON_BIN" >/dev/null 2>&1; then
+  echo "Python interpreter not found: $PYTHON_BIN" >&2
+  exit 2
+fi
+
+if [[ ! -d "$KNOWLEDGE_ROOT" ]]; then
+  echo "Knowledge root does not exist: $KNOWLEDGE_ROOT" >&2
+  exit 2
+fi
+
+mkdir -p "$REPORT_DIR"
+
+TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
+AUDIT_REPORT="$REPORT_DIR/parse_audit_${TIMESTAMP}.json"
+INGEST_LOG="$REPORT_DIR/ingest_${TIMESTAMP}.log"
+INSPECT_LOG="$REPORT_DIR/inspect_${TIMESTAMP}.log"
+
+cd "$REPO_ROOT"
+
+echo "=== VPS Vector Build Stage ==="
+echo "Repo root: $REPO_ROOT"
+echo "Knowledge root: $KNOWLEDGE_ROOT"
+echo "DB path: $DB_PATH"
+echo "Collection: $COLLECTION"
+echo "Python: $PYTHON_BIN"
+
+echo "[1/3] Strict parser audit"
+"$PYTHON_BIN" -m myRAG_app.parser.audit \
+  --knowledge-root "$KNOWLEDGE_ROOT" \
+  --report-path "$AUDIT_REPORT" \
+  --strict
+
+echo "[2/3] Strict vector ingestion with reset"
+"$PYTHON_BIN" -m myRAG_app.vector.ingest_cli \
+  --knowledge-root "$KNOWLEDGE_ROOT" \
+  --db-path "$DB_PATH" \
+  --collection "$COLLECTION" \
+  --reset \
+  --strict-parse | tee "$INGEST_LOG"
+
+echo "[3/3] Inspect vector DB"
+"$PYTHON_BIN" -m myRAG_app.vector.inspect_cli \
+  --db-path "$DB_PATH" \
+  --collection "$COLLECTION" \
+  --sample 3 | tee "$INSPECT_LOG"
+
+vector_count=$(awk -F': ' '/Vector count/ {print $2; exit}' "$INSPECT_LOG")
+if [[ -z "$vector_count" ]]; then
+  echo "Failed to parse vector count from inspect output" >&2
+  exit 1
+fi
+
+if [[ "$vector_count" -le 0 ]]; then
+  echo "Vector count is zero after ingest" >&2
+  exit 1
+fi
+
+if [[ ! -f "$DB_PATH/chroma.sqlite3" ]]; then
+  echo "Missing expected file: $DB_PATH/chroma.sqlite3" >&2
+  exit 1
+fi
+
+echo "Vector build succeeded."
+echo "Vector count: $vector_count"
+echo "Audit report: $AUDIT_REPORT"
+echo "Ingest log: $INGEST_LOG"
+echo "Inspect log: $INSPECT_LOG"

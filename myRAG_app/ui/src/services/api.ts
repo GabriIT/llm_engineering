@@ -20,7 +20,14 @@ interface QueryRequest {
   retrieval?: RetrievalOptions;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");
+
+function apiUrl(path: string): string {
+  if (!API_BASE_URL) {
+    return path;
+  }
+  return `${API_BASE_URL}${path}`;
+}
 
 const DEFAULT_RETRIEVAL: Required<
   Pick<RetrievalOptions, "k" | "search_type" | "fetch_k" | "lambda_mult">
@@ -40,7 +47,7 @@ export async function queryRag(payload: QueryRequest): Promise<QueryResponse> {
     },
   };
 
-  const response = await fetch(`${API_BASE_URL}/api/rag/query`, {
+  const response = await fetch(apiUrl("/api/rag/query"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -67,7 +74,7 @@ export async function queryRag(payload: QueryRequest): Promise<QueryResponse> {
 }
 
 export async function fetchHealth(): Promise<{ status: string; collection: string; db_path: string }> {
-  const response = await fetch(`${API_BASE_URL}/api/health`);
+  const response = await fetch(apiUrl("/api/health"));
   if (!response.ok) {
     throw new Error(`Health check failed (${response.status})`);
   }

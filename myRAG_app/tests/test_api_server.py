@@ -22,6 +22,14 @@ class ApiServerTests(unittest.TestCase):
         self.assertIn("collection", payload)
         self.assertIn("db_path", payload)
 
+    @patch.dict("os.environ", {"MYRAG_ALLOWED_ORIGINS": "http://154.12.245.254,http://example.com"})
+    def test_allowed_origins_from_env(self) -> None:
+        app = create_app()
+        cors_middlewares = [m for m in app.user_middleware if m.cls.__name__ == "CORSMiddleware"]
+        self.assertEqual(len(cors_middlewares), 1)
+        allow_origins = cors_middlewares[0].kwargs.get("allow_origins", [])
+        self.assertEqual(allow_origins, ["http://154.12.245.254", "http://example.com"])
+
     @patch("myRAG_app.api.server.answer_question")
     def test_query_success(self, mock_answer_question) -> None:
         mock_answer_question.return_value = (

@@ -291,3 +291,7 @@ npm run test:run
 3. Main pane shows full multi-turn conversation for selected thread.
 4. Sending a query calls backend and appends assistant reply with source list.
 5. Refreshing the browser preserves user threads by username.
+
+## Deployment
+Use the dedicated deployment runbook:
+`myRAG_app/README_deployment.md`

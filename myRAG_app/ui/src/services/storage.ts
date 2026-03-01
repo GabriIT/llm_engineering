@@ -35,12 +35,32 @@ function toHex(buffer: ArrayBuffer): string {
     .join("");
 }
 
+function fallbackHash(input: string): string {
+  // Non-crypto fallback for non-secure contexts (HTTP/IP deployments).
+  let h1 = 5381;
+  let h2 = 52711;
+  for (let i = 0; i < input.length; i += 1) {
+    const c = input.charCodeAt(i);
+    h1 = (h1 * 33) ^ c;
+    h2 = (h2 * 31) ^ c;
+  }
+  return `fallback-${(h1 >>> 0).toString(16)}${(h2 >>> 0).toString(16)}`;
+}
+
 export async function hashPassword(password: string): Promise<string> {
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(password.trim()),
-  );
-  return toHex(digest);
+  const normalized = password.trim();
+  if (
+    typeof globalThis.crypto !== "undefined" &&
+    globalThis.crypto.subtle &&
+    typeof globalThis.crypto.subtle.digest === "function"
+  ) {
+    const digest = await globalThis.crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(normalized),
+    );
+    return toHex(digest);
+  }
+  return fallbackHash(normalized);
 }
 
 export function getUsers(): AuthUser[] {

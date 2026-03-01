@@ -1,0 +1,44 @@
+services:
+  myrag-api:
+    build:
+      context: ../..
+      dockerfile: myRAG_app/deploy/Dockerfile.api
+    container_name: myrag-api
+    env_file:
+      - .env.vps
+    environment:
+      MYRAG_DB_PATH: /data/vector_db
+      MYRAG_COLLECTION: ${MYRAG_COLLECTION:-myrag_docs}
+      MYRAG_ALLOWED_ORIGINS: ${MYRAG_ALLOWED_ORIGINS:-http://154.12.245.254}
+    volumes:
+      - ${MYRAG_DB_PATH:?set MYRAG_DB_PATH in .env.vps}:/data/vector_db
+    ports:
+      - "127.0.0.1:18000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  myrag-ui:
+    build:
+      context: ../..
+      dockerfile: myRAG_app/deploy/Dockerfile.ui
+      args:
+        VITE_BASE_PATH: ${VITE_BASE_PATH:-/RAG-mat/}
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/RAG-mat}
+    container_name: myrag-ui
+    ports:
+      - "127.0.0.1:18001:80"
+    depends_on:
+      myrag-api:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
