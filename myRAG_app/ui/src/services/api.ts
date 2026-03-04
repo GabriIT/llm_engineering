@@ -1,4 +1,4 @@
-import type { QueryResponse, Role } from "../types";
+import type { ChatModelOption, QueryResponse, Role } from "../types";
 
 interface HistoryMessage {
   role: Role;
@@ -18,6 +18,7 @@ interface QueryRequest {
   question: string;
   history?: HistoryMessage[];
   retrieval?: RetrievalOptions;
+  chat_model?: ChatModelOption;
 }
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");

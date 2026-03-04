@@ -1,0 +1,4 @@
+interface:
+  display_name: "FAQ CSV Generator"
+  short_description: "Generate FAQ CSV from markdown corpus"
+  default_prompt: "Use $faq-csv-generator to generate a 500+ row FAQ CSV from folder-level markdown files with source traceability."

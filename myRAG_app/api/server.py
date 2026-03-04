@@ -64,6 +64,7 @@ def create_app() -> FastAPI:
         retrieval = payload.retrieval or RetrievalOptions()
 
         history = [{"role": item.role, "content": item.content} for item in payload.history]
+        selected_chat_model = payload.chat_model or DEFAULT_CHAT_MODEL
 
         db_path = Path(os.getenv("MYRAG_DB_PATH", str(DEFAULT_DB_PATH))).expanduser().resolve()
         collection = os.getenv("MYRAG_COLLECTION", DEFAULT_COLLECTION_NAME)
@@ -75,7 +76,7 @@ def create_app() -> FastAPI:
                 db_path=db_path,
                 collection_name=collection,
                 embedding_model=DEFAULT_EMBEDDING_MODEL,
-                chat_model=DEFAULT_CHAT_MODEL,
+                chat_model=selected_chat_model,
                 k=retrieval.k,
                 search_type=retrieval.search_type,
                 fetch_k=retrieval.fetch_k,
@@ -118,7 +119,7 @@ def create_app() -> FastAPI:
             answer=answer,
             sources=sources,
             meta=QueryMeta(
-                chat_model=DEFAULT_CHAT_MODEL,
+                chat_model=selected_chat_model,
                 embedding_model=DEFAULT_EMBEDDING_MODEL,
                 k=retrieval.k,
                 search_type=retrieval.search_type,

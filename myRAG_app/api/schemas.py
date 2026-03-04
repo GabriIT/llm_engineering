@@ -11,6 +11,7 @@ from myRAG_app.vector.config import (
     DEFAULT_RETRIEVAL_K,
     DEFAULT_RETRIEVAL_LAMBDA_MULT,
     DEFAULT_RETRIEVAL_SEARCH_TYPE,
+    SUPPORTED_CHAT_MODELS,
 )
 
 RoleType = Literal["user", "assistant"]
@@ -43,6 +44,7 @@ class QueryRequest(BaseModel):
     question: str = Field(..., min_length=1)
     history: list[HistoryMessage] = Field(default_factory=list)
     retrieval: RetrievalOptions | None = None
+    chat_model: str | None = None
 
     @field_validator("question")
     @classmethod
@@ -51,6 +53,20 @@ class QueryRequest(BaseModel):
         if not question:
             raise ValueError("question must not be blank")
         return question
+
+    @field_validator("chat_model")
+    @classmethod
+    def validate_chat_model(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        model = value.strip()
+        if not model:
+            return None
+        if model not in SUPPORTED_CHAT_MODELS:
+            raise ValueError(
+                f"chat_model must be one of: {', '.join(SUPPORTED_CHAT_MODELS)}"
+            )
+        return model
 
 
 class SourceRef(BaseModel):

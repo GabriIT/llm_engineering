@@ -1,4 +1,5 @@
 export type Role = "user" | "assistant";
+export type ChatModelOption = "gpt-4.1-nano" | "qwen3:latest" | "llama3.2:latest";
 
 export interface AuthUser {
   username: string;

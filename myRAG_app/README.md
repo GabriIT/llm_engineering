@@ -244,6 +244,42 @@ bash myRAG_app/skills/folder-markdown-exporter/scripts/export_folder_markdown.sh
 2. Export report:
 `/tmp/myrag_markdown_export_report.json`
 
+## FAQ CSV Generator Skill
+Skill location:
+`myRAG_app/skills/faq-csv-generator`
+
+Use this skill to generate a FAQ CSV from markdown files with at least 500 rows and source traceability.
+It supports two modes: `faq` (default) and `classification` (for category-supervision style answers).
+
+### Generate FAQ CSV
+```bash
+bash myRAG_app/skills/faq-csv-generator/scripts/generate_faq_csv.sh \
+  --input-dir /home/gabri/udemy/llm_engineering/myRAG_app/markdown_knowledge \
+  --output-csv /tmp/myrag_faq.csv \
+  --report-path /tmp/myrag_faq_report.json \
+  --min-rows 500
+```
+
+### Strict FAQ CSV generation
+```bash
+bash myRAG_app/skills/faq-csv-generator/scripts/generate_faq_csv.sh \
+  --input-dir /home/gabri/udemy/llm_engineering/myRAG_app/markdown_knowledge \
+  --output-csv /tmp/myrag_faq.csv \
+  --report-path /tmp/myrag_faq_report.json \
+  --min-rows 500 \
+  --strict
+```
+
+### Classification-focused CSV generation
+```bash
+bash myRAG_app/skills/faq-csv-generator/scripts/generate_faq_csv.sh \
+  --input-dir /home/gabri/udemy/llm_engineering/myRAG_app/markdown_knowledge \
+  --output-csv /tmp/myrag_faq_classification.csv \
+  --report-path /tmp/myrag_faq_classification_report.json \
+  --min-rows 500 \
+  --generation-mode classification
+```
+
 ## Output Files
 1. Parse audit report:
 `/tmp/myrag_parse_report.json`
@@ -251,6 +287,10 @@ bash myRAG_app/skills/folder-markdown-exporter/scripts/export_folder_markdown.sh
 `/tmp/myrag_chunks.jsonl`
 3. Local Chroma persist directory:
 `/home/gabri/udemy/llm_engineering/myRAG_app/vector_db`
+4. FAQ CSV output:
+`/tmp/myrag_faq.csv`
+5. FAQ generation report:
+`/tmp/myrag_faq_report.json`
 
 ## TypeScript UI + API (Multi-Thread Chat)
 This app now includes:
@@ -259,6 +299,10 @@ This app now includes:
 2. A React + Vite + TypeScript frontend:
 `myRAG_app/ui`
 3. Local pseudo-auth + per-user local thread persistence.
+4. UI chat-model selector with options:
+- `gpt-4.1-nano` (default)
+- `qwen3:latest` (Ollama)
+- `llama3.2:latest` (Ollama)
 
 ### API Endpoints
 1. `GET /api/health`
@@ -288,6 +332,27 @@ cd /home/gabri/udemy/llm_engineering/myRAG_app/ui
 npm install
 ```
 
+Install Ollama bridge package for Python backend model selection:
+```bash
+uv pip install --python .venv/bin/python langchain-ollama
+```
+
+Install and run Ollama (if not already running):
+```bash
+ollama serve
+```
+
+Pull local models:
+```bash
+ollama pull qwen3:latest
+ollama pull llama3.2:latest
+```
+
+Optional `.env` override for Ollama URL:
+```bash
+echo "OLLAMA_URL=http://127.0.0.1:11434" >> /home/gabri/udemy/llm_engineering/.env
+```
+
 ### Run Backend API
 From repo root:
 ```bash
@@ -299,6 +364,21 @@ From `myRAG_app/ui`:
 ```bash
 echo "VITE_API_BASE_URL=http://localhost:8000" > .env.local
 npm run dev
+```
+
+### Use Model Selector in UI
+1. Login to the UI.
+2. In the query composer, choose a model from the `Model` dropdown.
+3. Send the query.
+4. The selected model is sent per request to the backend:
+- `gpt-4.1-nano` uses OpenAI chat.
+- `qwen3:latest` and `llama3.2:latest` use Ollama chat at `OLLAMA_URL`.
+
+Notes:
+1. Retrieval embeddings still use OpenAI (`text-embedding-3-large`) for this vector DB.
+2. If Ollama model calls fail, verify:
+```bash
+curl http://127.0.0.1:11434/api/tags
 ```
 
 ### Run Tests

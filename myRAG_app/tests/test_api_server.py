@@ -65,11 +65,35 @@ class ApiServerTests(unittest.TestCase):
         self.assertEqual(payload["answer"], "Answer text")
         self.assertEqual(payload["meta"]["k"], 9)
         self.assertEqual(payload["meta"]["search_type"], "mmr")
+        self.assertEqual(payload["meta"]["chat_model"], "gpt-4.1-nano")
         self.assertEqual(len(payload["sources"]), 1)
         self.assertEqual(payload["sources"][0]["source_name"], "source.pdf")
 
+    @patch("myRAG_app.api.server.answer_question")
+    def test_query_with_selected_chat_model(self, mock_answer_question) -> None:
+        mock_answer_question.return_value = ("Answer text", [])
+        response = self.client.post(
+            "/api/rag/query",
+            json={
+                "question": "Classify this content",
+                "chat_model": "qwen3:latest",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["meta"]["chat_model"], "qwen3:latest")
+        _, kwargs = mock_answer_question.call_args
+        self.assertEqual(kwargs["chat_model"], "qwen3:latest")
+
     def test_query_validation(self) -> None:
         response = self.client.post("/api/rag/query", json={"question": "   "})
+        self.assertIn(response.status_code, {400, 422})
+
+    def test_query_validation_invalid_chat_model(self) -> None:
+        response = self.client.post(
+            "/api/rag/query",
+            json={"question": "Hello", "chat_model": "invalid-model"},
+        )
         self.assertIn(response.status_code, {400, 422})
 
     @patch("myRAG_app.api.server.answer_question")

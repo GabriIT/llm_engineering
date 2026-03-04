@@ -9,6 +9,51 @@ This runbook deploys `myRAG_app` with:
 4. Local vector DB copy as controlled fallback
 5. Non-disruptive behavior for already running VPS apps
 
+## Fast Update (Existing VPS Deployment)
+
+Use this when `/RAG-mat` is already deployed and you want the newest code.
+
+1. SSH to VPS and update repo:
+```bash
+ssh user@154.12.245.254
+cd /path/to/repo
+git fetch --all
+git pull --ff-only
+```
+
+2. Ensure deploy env exists and includes current values:
+```bash
+cd myRAG_app/deploy
+test -f .env.vps || cp .env.example .env.vps
+```
+
+For Ollama-backed chat model options (`qwen3:latest`, `llama3.2:latest`), set:
+```bash
+echo "OLLAMA_URL=http://172.17.0.1:11434" >> .env.vps
+```
+
+3. Rebuild and restart only myRAG stack:
+```bash
+bash scripts/deploy_compose.sh
+```
+
+4. Validate:
+```bash
+curl -i http://127.0.0.1:18000/api/health
+curl -i http://154.12.245.254/RAG-mat/api/health
+curl -I http://154.12.245.254/RAG-mat/
+```
+
+5. Rebuild vector DB only if knowledge corpus changed:
+```bash
+cd /path/to/repo
+bash myRAG_app/deploy/scripts/build_vector_db_vps.sh \
+  --knowledge-root /srv/myrag/myRAG_knowledge \
+  --db-path /srv/myrag/vector_db \
+  --collection myrag_docs \
+  --python-bin .venv/bin/python
+```
+
 ## 1. Deployment Strategy
 
 1. Reuse existing reverse proxy (Nginx/Caddy/Apache) if present.

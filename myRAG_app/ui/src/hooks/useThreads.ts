@@ -7,7 +7,7 @@ import {
   saveThreadsForUser,
   setActiveThreadId,
 } from "../services/storage";
-import type { ChatThread, QueryResponse, ThreadMessage } from "../types";
+import type { ChatModelOption, ChatThread, QueryResponse, ThreadMessage } from "../types";
 
 const ERROR_FALLBACK =
   "The backend request failed. Please retry. Check API server and network connectivity.";
@@ -120,7 +120,7 @@ export function useThreads(username: string | null) {
     setActiveThreadIdState(threadId);
   }
 
-  async function sendQuery(questionInput: string): Promise<void> {
+  async function sendQuery(questionInput: string, chatModel: ChatModelOption): Promise<void> {
     const question = questionInput.trim();
     if (!question || !username || isSending) {
       return;
@@ -156,6 +156,7 @@ export function useThreads(username: string | null) {
       const response: QueryResponse = await queryRag({
         question,
         history: priorHistory,
+        chat_model: chatModel,
       });
       const assistantMessage: ThreadMessage = {
         id: newId(),

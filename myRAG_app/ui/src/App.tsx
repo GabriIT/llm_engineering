@@ -6,6 +6,7 @@ import { ThreadSidebar } from "./components/ThreadSidebar";
 import { ThreadView } from "./components/ThreadView";
 import { useAuth } from "./hooks/useAuth";
 import { useThreads } from "./hooks/useThreads";
+import type { ChatModelOption } from "./types";
 
 export default function App() {
   const { currentUser, register, login, logout } = useAuth();
@@ -20,6 +21,7 @@ export default function App() {
     sendQuery,
   } = useThreads(currentUser);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<ChatModelOption>("gpt-4.1-nano");
 
   if (!currentUser) {
     return <AuthPanel onRegister={register} onLogin={login} />;
@@ -63,7 +65,13 @@ export default function App() {
 
         <ThreadView thread={activeThread} />
 
-        <QueryComposer disabled={!currentUser} isSending={isSending} onSend={sendQuery} />
+        <QueryComposer
+          disabled={!currentUser}
+          isSending={isSending}
+          selectedModel={selectedModel}
+          onSelectModel={setSelectedModel}
+          onSend={sendQuery}
+        />
       </main>
     </div>
   );

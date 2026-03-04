@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -16,6 +17,7 @@ from .config import (
     DEFAULT_RETRIEVAL_K,
     DEFAULT_RETRIEVAL_LAMBDA_MULT,
     DEFAULT_RETRIEVAL_SEARCH_TYPE,
+    OLLAMA_CHAT_MODELS,
 )
 from .retrieval import retrieve_context
 
@@ -28,6 +30,21 @@ Include short source citations using [source_name] or [source_name p.X] when pos
 Context:
 {context}
 """.strip()
+
+
+def _create_chat_model(model_name: str):
+    if model_name in OLLAMA_CHAT_MODELS:
+        try:
+            from langchain_ollama import ChatOllama
+        except ImportError as exc:
+            raise RuntimeError(
+                "Model selection requires langchain-ollama for Ollama models. "
+                "Install with: uv pip install --python .venv/bin/python langchain-ollama"
+            ) from exc
+        ollama_url = os.getenv("OLLAMA_URL", "http://127.0.0.1:11434")
+        return ChatOllama(model=model_name, base_url=ollama_url, temperature=0)
+
+    return ChatOpenAI(model_name=model_name, temperature=0)
 
 
 def _combined_query(question: str, history: list[dict] | None) -> str:
@@ -91,7 +108,7 @@ def answer_question(
         source_contains=source_contains,
     )
     context = _format_context(docs)
-    llm = ChatOpenAI(model_name=chat_model, temperature=0)
+    llm = _create_chat_model(chat_model)
 
     messages = [SystemMessage(content=SYSTEM_PROMPT.format(context=context))]
     if history:
