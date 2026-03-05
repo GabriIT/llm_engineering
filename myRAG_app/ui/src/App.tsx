@@ -22,6 +22,7 @@ export default function App() {
   } = useThreads(currentUser);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState<ChatModelOption>("gpt-4.1-nano");
+  const [answerViewMode, setAnswerViewMode] = useState<"structured" | "raw">("structured");
 
   if (!currentUser) {
     return <AuthPanel onRegister={register} onLogin={login} />;
@@ -59,11 +60,27 @@ export default function App() {
             <h1>{activeThread?.title ?? "myRAG Chat"}</h1>
             <p>Multi-turn RAG assistant with local pseudo-auth and thread history.</p>
           </div>
+          <div className="view-toggle" role="group" aria-label="Answer view mode">
+            <button
+              type="button"
+              className={answerViewMode === "structured" ? "active" : ""}
+              onClick={() => setAnswerViewMode("structured")}
+            >
+              Structured
+            </button>
+            <button
+              type="button"
+              className={answerViewMode === "raw" ? "active" : ""}
+              onClick={() => setAnswerViewMode("raw")}
+            >
+              Raw
+            </button>
+          </div>
         </header>
 
         {storageWarning ? <div className="warning-banner">{storageWarning}</div> : null}
 
-        <ThreadView thread={activeThread} />
+        <ThreadView thread={activeThread} answerViewMode={answerViewMode} />
 
         <QueryComposer
           disabled={!currentUser}

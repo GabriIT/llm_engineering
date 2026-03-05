@@ -13,17 +13,23 @@ This runbook deploys `myRAG_app` with:
 
 Use this when `/RAG-mat` is already deployed and you want the newest code.
 
+Assumed VPS paths:
+1. Repo root: `/home/ubuntu/myrag-deploy`
+2. Deploy folder: `/home/ubuntu/myrag-deploy/myRAG_app/deploy`
+3. Knowledge folder: `/home/ubuntu/myrag-deploy/myRAG_knowledge`
+4. Vector DB folder: `/home/ubuntu/myrag-deploy/vector_db`
+
 1. SSH to VPS and update repo:
 ```bash
-ssh user@154.12.245.254
-cd /path/to/repo
+ssh ubuntu@154.12.245.254
+cd /home/ubuntu/myrag-deploy
 git fetch --all
 git pull --ff-only
 ```
 
 2. Ensure deploy env exists and includes current values:
 ```bash
-cd myRAG_app/deploy
+cd /home/ubuntu/myrag-deploy/myRAG_app/deploy
 test -f .env.vps || cp .env.example .env.vps
 ```
 
@@ -34,11 +40,13 @@ echo "OLLAMA_URL=http://172.17.0.1:11434" >> .env.vps
 
 3. Rebuild and restart only myRAG stack:
 ```bash
+cd /home/ubuntu/myrag-deploy/myRAG_app/deploy
 bash scripts/deploy_compose.sh
 ```
 
 4. Validate:
 ```bash
+cd /home/ubuntu/myrag-deploy
 curl -i http://127.0.0.1:18000/api/health
 curl -i http://154.12.245.254/RAG-mat/api/health
 curl -I http://154.12.245.254/RAG-mat/
@@ -46,10 +54,10 @@ curl -I http://154.12.245.254/RAG-mat/
 
 5. Rebuild vector DB only if knowledge corpus changed:
 ```bash
-cd /path/to/repo
+cd /home/ubuntu/myrag-deploy
 bash myRAG_app/deploy/scripts/build_vector_db_vps.sh \
-  --knowledge-root /srv/myrag/myRAG_knowledge \
-  --db-path /srv/myrag/vector_db \
+  --knowledge-root /home/ubuntu/myrag-deploy/myRAG_knowledge \
+  --db-path /home/ubuntu/myrag-deploy/vector_db \
   --collection myrag_docs \
   --python-bin .venv/bin/python
 ```
@@ -84,10 +92,11 @@ bash myRAG_app/deploy/scripts/build_vector_db_vps.sh \
 Run precheck first on VPS:
 
 ```bash
+cd /home/ubuntu/myrag-deploy
 bash myRAG_app/deploy/scripts/vps_precheck.sh \
-  --knowledge-root /srv/myrag/myRAG_knowledge \
-  --vector-db-path /srv/myrag/vector_db \
-  --python-bin python3
+  --knowledge-root /home/ubuntu/myrag-deploy/myRAG_knowledge \
+  --vector-db-path /home/ubuntu/myrag-deploy/vector_db \
+  --python-bin /home/ubuntu/myrag-deploy/.venv/bin/python
 ```
 
 Expected gates:
@@ -127,14 +136,14 @@ Install Docker/Compose only if absent and required by your chosen runtime.
 ### 4.2 Create deployment env
 
 ```bash
-cd /path/to/repo/myRAG_app/deploy
+cd /home/ubuntu/myrag-deploy/myRAG_app/deploy
 cp .env.example .env.vps
 ```
 
 Edit `.env.vps`:
 
 1. `OPENAI_API_KEY`
-2. `MYRAG_DB_PATH=/srv/myrag/vector_db`
+2. `MYRAG_DB_PATH=/home/ubuntu/myrag-deploy/vector_db`
 3. `MYRAG_COLLECTION=myrag_docs`
 4. `MYRAG_ALLOWED_ORIGINS=http://154.12.245.254`
 5. `VITE_BASE_PATH=/RAG-mat/`
@@ -146,14 +155,15 @@ Sync local knowledge to VPS:
 
 ```bash
 rsync -az --delete /home/gabri/udemy/llm_engineering/myRAG_knowledge/ \
-  user@154.12.245.254:/srv/myrag/myRAG_knowledge/
+  ubuntu@154.12.245.254:/home/ubuntu/myrag-deploy/myRAG_knowledge/
 ```
 
 Validate on VPS:
 
 ```bash
-find /srv/myrag/myRAG_knowledge -type f | wc -l
-du -sh /srv/myrag/myRAG_knowledge
+cd /home/ubuntu/myrag-deploy
+find /home/ubuntu/myrag-deploy/myRAG_knowledge -type f | wc -l
+du -sh /home/ubuntu/myrag-deploy/myRAG_knowledge
 ```
 
 ## 6. Primary Path: Build Vector DB on VPS
@@ -161,9 +171,10 @@ du -sh /srv/myrag/myRAG_knowledge
 Run on VPS from repo root:
 
 ```bash
+cd /home/ubuntu/myrag-deploy
 bash myRAG_app/deploy/scripts/build_vector_db_vps.sh \
-  --knowledge-root /srv/myrag/myRAG_knowledge \
-  --db-path /srv/myrag/vector_db \
+  --knowledge-root /home/ubuntu/myrag-deploy/myRAG_knowledge \
+  --db-path /home/ubuntu/myrag-deploy/vector_db \
   --collection myrag_docs \
   --python-bin .venv/bin/python
 ```
@@ -185,14 +196,15 @@ Use only if VPS build fails or is blocked.
 Run locally:
 
 ```bash
+cd /home/gabri/udemy/llm_engineering
 bash myRAG_app/deploy/scripts/copy_vector_db_from_local.sh \
   --remote-host 154.12.245.254 \
-  --remote-user user \
-  --remote-db-path /srv/myrag/vector_db \
+  --remote-user ubuntu \
+  --remote-db-path /home/ubuntu/myrag-deploy/vector_db \
   --mode compose \
-  --compose-project-dir /path/to/repo \
+  --compose-project-dir /home/ubuntu/myrag-deploy \
   --compose-file myRAG_app/deploy/docker-compose.yml \
-  --remote-repo-path /path/to/repo \
+  --remote-repo-path /home/ubuntu/myrag-deploy \
   --remote-python-bin .venv/bin/python \
   --collection myrag_docs
 ```
@@ -209,12 +221,14 @@ The script:
 On VPS from repo root:
 
 ```bash
+cd /home/ubuntu/myrag-deploy
 bash myRAG_app/deploy/scripts/deploy_compose.sh
 ```
 
 Manual equivalent:
 
 ```bash
+cd /home/ubuntu/myrag-deploy
 docker compose --env-file myRAG_app/deploy/.env.vps \
   -f myRAG_app/deploy/docker-compose.yml up -d --build
 ```
@@ -222,6 +236,7 @@ docker compose --env-file myRAG_app/deploy/.env.vps \
 Check:
 
 ```bash
+cd /home/ubuntu/myrag-deploy
 docker compose --env-file myRAG_app/deploy/.env.vps \
   -f myRAG_app/deploy/docker-compose.yml ps
 curl -fsS http://127.0.0.1:18000/api/health
@@ -277,6 +292,7 @@ Non-regression validation:
 3. Stop only myRAG compose stack:
 
 ```bash
+cd /home/ubuntu/myrag-deploy
 docker compose --env-file myRAG_app/deploy/.env.vps \
   -f myRAG_app/deploy/docker-compose.yml down
 ```
@@ -298,6 +314,7 @@ docker compose --env-file myRAG_app/deploy/.env.vps \
 - Install missing parser deps:
 
 ```bash
+cd /home/ubuntu/myrag-deploy
 .venv/bin/python -m pip install pypdf docx2txt openpyxl pymupdf rapidocr-onnxruntime pillow
 ```
 

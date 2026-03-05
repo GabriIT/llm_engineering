@@ -14,11 +14,18 @@ export interface SourceRef {
   sheet_name?: string;
 }
 
+export interface StructuredAnswer {
+  prompt: string;
+  bullets: string[];
+  answer_text: string;
+}
+
 export interface ThreadMessage {
   id: string;
   role: Role;
   content: string;
   createdAt: string;
+  structured?: StructuredAnswer;
   sources?: SourceRef[];
 }
 
@@ -40,6 +47,7 @@ export interface QueryMeta {
 
 export interface QueryResponse {
   answer: string;
+  structured?: StructuredAnswer;
   sources: SourceRef[];
   meta: QueryMeta;
 }

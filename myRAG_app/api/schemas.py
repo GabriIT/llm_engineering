@@ -85,8 +85,15 @@ class QueryMeta(BaseModel):
     elapsed_ms: int
 
 
+class StructuredAnswer(BaseModel):
+    prompt: str
+    bullets: list[str] = Field(default_factory=list)
+    answer_text: str
+
+
 class QueryResponse(BaseModel):
     answer: str
+    structured: StructuredAnswer | None = None
     sources: list[SourceRef]
     meta: QueryMeta
 

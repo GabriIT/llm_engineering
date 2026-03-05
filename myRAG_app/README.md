@@ -315,8 +315,13 @@ Body:
 - `question`
 - `history` (optional)
 - `retrieval` (optional: `k`, `search_type`, `fetch_k`, `lambda_mult`, `doc_type`, `source_contains`)
+- `chat_model` (optional: `gpt-4.1-nano`, `qwen3:latest`, `llama3.2:latest`)
 Returns:
-- `answer`
+- `answer` (legacy plain text compatibility)
+- `structured`:
+  - `prompt`
+  - `bullets` (few concise points)
+  - `answer_text`
 - `sources`
 - `meta`
 
@@ -398,8 +403,12 @@ npm run test:run
 1. Register/login with local pseudo-auth (`localStorage` only).
 2. Left sidebar lists previous threads for current user.
 3. Main pane shows full multi-turn conversation for selected thread.
-4. Sending a query calls backend and appends assistant reply with source list.
+4. Sending a query calls backend and appends assistant reply in this order:
+- `Prompt`
+- `Answer` with bullet points and short paragraph
+- `Sources` list
 5. Refreshing the browser preserves user threads by username.
+6. Use the header toggle `Structured | Raw` to switch between formatted output and raw answer text for debugging/training review.
 
 ## Deployment
 Use the dedicated deployment runbook:

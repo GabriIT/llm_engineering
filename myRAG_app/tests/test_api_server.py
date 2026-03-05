@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from langchain_core.documents import Document
 
 from myRAG_app.api.server import create_app
+from myRAG_app.vector.answer import StructuredRagAnswer
 
 
 class ApiServerTests(unittest.TestCase):
@@ -30,10 +31,15 @@ class ApiServerTests(unittest.TestCase):
         allow_origins = cors_middlewares[0].kwargs.get("allow_origins", [])
         self.assertEqual(allow_origins, ["http://154.12.245.254", "http://example.com"])
 
-    @patch("myRAG_app.api.server.answer_question")
-    def test_query_success(self, mock_answer_question) -> None:
-        mock_answer_question.return_value = (
-            "Answer text",
+    @patch("myRAG_app.api.server.answer_question_structured")
+    def test_query_success(self, mock_answer_question_structured) -> None:
+        mock_answer_question_structured.return_value = (
+            StructuredRagAnswer(
+                prompt="What is in the certificate?",
+                bullets=["Certificate states migration compliance.", "Validity date is listed."],
+                answer_text="The certificate confirms migration compliance and states validity details.",
+            ),
+            "- Certificate states migration compliance.\n- Validity date is listed.\n\nThe certificate confirms migration compliance and states validity details.",
             [
                 Document(
                     page_content="context",
@@ -62,16 +68,26 @@ class ApiServerTests(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 200)
         payload = response.json()
-        self.assertEqual(payload["answer"], "Answer text")
+        self.assertIn("Certificate states migration compliance.", payload["answer"])
+        self.assertEqual(payload["structured"]["prompt"], "What is in the certificate?")
+        self.assertEqual(len(payload["structured"]["bullets"]), 2)
         self.assertEqual(payload["meta"]["k"], 9)
         self.assertEqual(payload["meta"]["search_type"], "mmr")
         self.assertEqual(payload["meta"]["chat_model"], "gpt-4.1-nano")
         self.assertEqual(len(payload["sources"]), 1)
         self.assertEqual(payload["sources"][0]["source_name"], "source.pdf")
 
-    @patch("myRAG_app.api.server.answer_question")
-    def test_query_with_selected_chat_model(self, mock_answer_question) -> None:
-        mock_answer_question.return_value = ("Answer text", [])
+    @patch("myRAG_app.api.server.answer_question_structured")
+    def test_query_with_selected_chat_model(self, mock_answer_question_structured) -> None:
+        mock_answer_question_structured.return_value = (
+            StructuredRagAnswer(
+                prompt="Classify this content",
+                bullets=["Belongs to classification workflow."],
+                answer_text="Category hint is available.",
+            ),
+            "- Belongs to classification workflow.\n\nCategory hint is available.",
+            [],
+        )
         response = self.client.post(
             "/api/rag/query",
             json={
@@ -82,7 +98,7 @@ class ApiServerTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         payload = response.json()
         self.assertEqual(payload["meta"]["chat_model"], "qwen3:latest")
-        _, kwargs = mock_answer_question.call_args
+        _, kwargs = mock_answer_question_structured.call_args
         self.assertEqual(kwargs["chat_model"], "qwen3:latest")
 
     def test_query_validation(self) -> None:
@@ -96,9 +112,9 @@ class ApiServerTests(unittest.TestCase):
         )
         self.assertIn(response.status_code, {400, 422})
 
-    @patch("myRAG_app.api.server.answer_question")
-    def test_query_backend_error(self, mock_answer_question) -> None:
-        mock_answer_question.side_effect = RuntimeError("backend exploded")
+    @patch("myRAG_app.api.server.answer_question_structured")
+    def test_query_backend_error(self, mock_answer_question_structured) -> None:
+        mock_answer_question_structured.side_effect = RuntimeError("backend exploded")
         response = self.client.post(
             "/api/rag/query",
             json={"question": "Hello"},

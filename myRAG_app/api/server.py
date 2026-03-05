@@ -16,8 +16,9 @@ from myRAG_app.api.schemas import (
     QueryResponse,
     RetrievalOptions,
     SourceRef,
+    StructuredAnswer,
 )
-from myRAG_app.vector.answer import answer_question
+from myRAG_app.vector.answer import answer_question_structured
 from myRAG_app.vector.config import (
     DEFAULT_CHAT_MODEL,
     DEFAULT_COLLECTION_NAME,
@@ -70,7 +71,7 @@ def create_app() -> FastAPI:
         collection = os.getenv("MYRAG_COLLECTION", DEFAULT_COLLECTION_NAME)
 
         try:
-            answer, docs = answer_question(
+            structured_answer, answer, docs = answer_question_structured(
                 payload.question,
                 history=history,
                 db_path=db_path,
@@ -117,6 +118,11 @@ def create_app() -> FastAPI:
         elapsed_ms = int((time.perf_counter() - started) * 1000)
         return QueryResponse(
             answer=answer,
+            structured=StructuredAnswer(
+                prompt=structured_answer.prompt,
+                bullets=structured_answer.bullets,
+                answer_text=structured_answer.answer_text,
+            ),
             sources=sources,
             meta=QueryMeta(
                 chat_model=selected_chat_model,

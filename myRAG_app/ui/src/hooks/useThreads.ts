@@ -163,6 +163,7 @@ export function useThreads(username: string | null) {
         role: "assistant",
         content: response.answer,
         createdAt: nowIso(),
+        structured: response.structured,
         sources: response.sources,
       };
 
