@@ -9,4 +9,16 @@ if [[ ! -x "$PYTHON_BIN" ]]; then
   exit 2
 fi
 
-"$PYTHON_BIN" -m myRAG_app.parser.export_markdown "$@"
+if [[ -f "$ROOT_DIR/.env" ]]; then
+  set -a
+  source "$ROOT_DIR/.env"
+  set +a
+fi
+
+# shellcheck source=/dev/null
+source "$ROOT_DIR/myRAG_app/scripts/knowledge_root_bootstrap.sh"
+myrag_set_knowledge_roots "$ROOT_DIR"
+myrag_refresh_indexed_knowledge "$ROOT_DIR"
+myrag_enforce_or_inject_knowledge_root "$PYTHON_BIN" "$@"
+
+"$PYTHON_BIN" -m myRAG_app.parser.export_markdown "${MYRAG_KNOWLEDGE_EXTRA_ARGS[@]}" "$@"

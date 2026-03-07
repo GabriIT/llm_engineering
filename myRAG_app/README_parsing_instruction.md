@@ -6,6 +6,12 @@ This guide explains how to parse updated source files from `myRAG_knowledge`, bu
 Use this flow whenever you add/replace files under:
 `/home/gabri/udemy/llm_engineering/myRAG_knowledge`
 
+## `.env` Defaults for Scripts
+1. `myRAG_app/deploy/scripts/rollback_vector_db.sh` auto-loads repo `.env`.
+2. If `MYRAG_DB_PATH` is set, rollback defaults to that active DB path.
+3. Default backup root is derived as `<active_db_parent>/<active_db_name>_backups`.
+4. Explicit flags override defaults.
+
 ## 1) Pre-check (recommended)
 Run parser audit first:
 
@@ -58,9 +64,7 @@ Restore latest backup:
 
 ```bash
 cd /home/gabri/udemy/llm_engineering
-bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
-  --active-db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
-  --backup-root /home/gabri/udemy/llm_engineering/myRAG_app/vector_db_backups
+bash myRAG_app/deploy/scripts/rollback_vector_db.sh
 ```
 
 Restore a specific backup:

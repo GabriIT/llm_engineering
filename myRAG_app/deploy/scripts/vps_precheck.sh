@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+if [[ -f "$REPO_ROOT/.env" ]]; then
+  set -a
+  source "$REPO_ROOT/.env"
+  set +a
+fi
+
 KNOWLEDGE_ROOT="/srv/myrag/myRAG_knowledge"
-VECTOR_DB_PATH="/srv/myrag/vector_db"
+VECTOR_DB_PATH="${MYRAG_DB_PATH:-/srv/myrag/vector_db}"
 PYTHON_BIN="python3"
 OUTPUT="/tmp/myrag_vps_precheck_$(date +%Y%m%d_%H%M%S).log"
 
@@ -28,7 +36,7 @@ while [[ $# -gt 0 ]]; do
       cat <<USAGE
 Usage: vps_precheck.sh [options]
   --knowledge-root PATH   VPS path where myRAG_knowledge is/will be stored
-  --vector-db-path PATH   VPS path for Chroma vector_db
+  --vector-db-path PATH   VPS path for Chroma vector_db (default: MYRAG_DB_PATH or /srv/myrag/vector_db)
   --python-bin PATH       Python interpreter for dependency checks
   --output PATH           Output log path
 USAGE

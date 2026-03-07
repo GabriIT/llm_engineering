@@ -4,7 +4,13 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
-ACTIVE_DB_PATH="$REPO_ROOT/myRAG_app/vector_db"
+if [[ -f "$REPO_ROOT/.env" ]]; then
+  set -a
+  source "$REPO_ROOT/.env"
+  set +a
+fi
+
+ACTIVE_DB_PATH="${MYRAG_DB_PATH:-$REPO_ROOT/myRAG_app/vector_db}"
 BACKUP_ROOT=""
 BACKUP_NAME=""
 DRY_RUN=0
@@ -14,8 +20,8 @@ usage() {
 Usage: rollback_vector_db.sh [options]
 
 Options:
-  --active-db-path PATH   Active vector DB path to restore (default: repo myRAG_app/vector_db)
-  --backup-root PATH      Backup root folder (default: <active_parent>/vector_db_backups)
+  --active-db-path PATH   Active vector DB path to restore (default: MYRAG_DB_PATH from .env or repo myRAG_app/vector_db)
+  --backup-root PATH      Backup root folder (default: <active_parent>/<active_db_name>_backups)
   --backup-name NAME      Specific backup folder name to restore
   --dry-run               Print planned actions without changing files
   -h, --help              Show this help message
@@ -66,7 +72,7 @@ ACTIVE_PARENT="$(dirname "$ACTIVE_DB_PATH")"
 ACTIVE_NAME="$(basename "$ACTIVE_DB_PATH")"
 
 if [[ -z "$BACKUP_ROOT" ]]; then
-  BACKUP_ROOT="$ACTIVE_PARENT/vector_db_backups"
+  BACKUP_ROOT="$ACTIVE_PARENT/${ACTIVE_NAME}_backups"
 fi
 BACKUP_ROOT="$(python3 - <<PY
 from pathlib import Path

@@ -4,9 +4,15 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
+if [[ -f "$REPO_ROOT/.env" ]]; then
+  set -a
+  source "$REPO_ROOT/.env"
+  set +a
+fi
+
 KNOWLEDGE_ROOT=""
 DB_PATH=""
-COLLECTION="myrag_docs"
+COLLECTION="${MYRAG_COLLECTION:-myrag_docs}"
 PYTHON_BIN=""
 REPORT_DIR="/tmp/myrag_deploy_reports"
 
@@ -35,7 +41,7 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       cat <<USAGE
 Usage: build_vector_db_vps.sh --knowledge-root PATH --db-path PATH [options]
-  --collection NAME      Chroma collection (default: myrag_docs)
+  --collection NAME      Chroma collection (default: MYRAG_COLLECTION from .env or myrag_docs)
   --python-bin PATH      Python interpreter (default: .venv/bin/python then python3)
   --report-dir PATH      Directory for parser/ingest reports
 USAGE

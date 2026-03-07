@@ -9,6 +9,28 @@ This runbook deploys `myRAG_app` with:
 4. Local vector DB copy as controlled fallback
 5. Non-disruptive behavior for already running VPS apps
 
+## Script Default Behavior (`.env`-first)
+1. Deployment scripts auto-load repo `.env` when present.
+2. `MYRAG_DB_PATH` and `MYRAG_COLLECTION` are used as defaults where applicable.
+3. Explicit flags always override defaults.
+4. Affected scripts:
+- `myRAG_app/deploy/scripts/vps_precheck.sh`
+- `myRAG_app/deploy/scripts/build_vector_db_vps.sh`
+- `myRAG_app/deploy/scripts/copy_vector_db_from_local.sh`
+- `myRAG_app/deploy/scripts/rollback_vector_db.sh`
+
+### Quick Env Check (VPS)
+Run this before ingest/query/deploy to confirm the active DB/collection:
+```bash
+cd /home/ubuntu/myrag-deploy
+set -a; source myRAG_app/deploy/.env.vps; set +a
+echo "MYRAG_DB_PATH=$MYRAG_DB_PATH"
+echo "MYRAG_COLLECTION=$MYRAG_COLLECTION"
+```
+
+For full local ingest mode commands, see:
+`myRAG_app/README_Ingest.md`
+
 ## Fast Update (Existing VPS Deployment)
 
 Use this when `/RAG-mat` is already deployed and you want the newest code.
@@ -100,7 +122,6 @@ Run precheck first on VPS:
 cd /home/ubuntu/myrag-deploy
 bash myRAG_app/deploy/scripts/vps_precheck.sh \
   --knowledge-root /home/ubuntu/myrag-deploy/myRAG_knowledge \
-  --vector-db-path /home/ubuntu/myrag-deploy/vector_db \
   --python-bin /home/ubuntu/myrag-deploy/.venv/bin/python
 ```
 
@@ -153,6 +174,10 @@ Edit `.env.vps`:
 4. `MYRAG_ALLOWED_ORIGINS=http://154.12.245.254`
 5. `VITE_BASE_PATH=/RAG-mat/`
 6. `VITE_API_BASE_URL=/RAG-mat`
+
+Important:
+1. `MYRAG_DB_PATH` and `MYRAG_COLLECTION` define the active vectorstore for RAG at runtime.
+2. API health exposes the active values: `GET /api/health`.
 
 ## 5. Knowledge Base on VPS
 
@@ -214,8 +239,7 @@ bash myRAG_app/deploy/scripts/copy_vector_db_from_local.sh \
   --compose-project-dir /home/ubuntu/myrag-deploy \
   --compose-file myRAG_app/deploy/docker-compose.yml \
   --remote-repo-path /home/ubuntu/myrag-deploy \
-  --remote-python-bin .venv/bin/python \
-  --collection myrag_docs
+  --remote-python-bin .venv/bin/python
 ```
 
 The script:
@@ -310,9 +334,7 @@ docker compose --env-file myRAG_app/deploy/.env.vps \
 
 ```bash
 cd /home/ubuntu/myrag-deploy
-bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
-  --active-db-path /home/ubuntu/myrag-deploy/vector_db \
-  --backup-root /home/ubuntu/myrag-deploy/vector_db_backups
+bash myRAG_app/deploy/scripts/rollback_vector_db.sh
 ```
 
 To restore a specific backup:
@@ -320,9 +342,15 @@ To restore a specific backup:
 ```bash
 cd /home/ubuntu/myrag-deploy
 bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
-  --active-db-path /home/ubuntu/myrag-deploy/vector_db \
-  --backup-root /home/ubuntu/myrag-deploy/vector_db_backups \
   --backup-name vector_db_backup_YYYYMMDD_HHMMSS
+```
+
+Explicit override example:
+```bash
+cd /home/ubuntu/myrag-deploy
+bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
+  --active-db-path /home/ubuntu/myrag-deploy/vector_db \
+  --backup-root /home/ubuntu/myrag-deploy/vector_db_backups
 ```
 
 5. Start myRAG API container:
@@ -370,5 +398,39 @@ cd /home/ubuntu/myrag-deploy
 .venv/bin/python -m pip install pypdf docx2txt openpyxl pymupdf rapidocr-onnxruntime pillow
 ```
 
+For PPTX parsing support:
+```bash
+cd /home/ubuntu/myrag-deploy
+.venv/bin/python -m pip install python-pptx requests
+```
+
+Optional PPTX vision enrichment support:
+```bash
+sudo apt update
+sudo apt install -y libreoffice poppler-utils
+```
+
 5. OpenAI failures during ingest/query
 - Confirm `OPENAI_API_KEY` exported or present in `.env.vps` and visible to runtime.
+
+6. Direct API run on VPS (without Docker) for debugging
+- Run with env file so runtime uses `.env.vps` values, including active vectorstore:
+
+```bash
+cd /home/ubuntu/myrag-deploy
+.venv/bin/uvicorn myRAG_app.api.server:app --host 0.0.0.0 --port 8000 --env-file myRAG_app/deploy/.env.vps
+```
+
+- Verify active store:
+
+```bash
+curl -s http://127.0.0.1:8000/api/health
+```
+
+7. Markdown vectorstore flow reference
+- See:
+`myRAG_app/README_markdown_vectorstore.md`
+
+8. PPTX parser skill reference
+- See:
+`myRAG_app/README_pptx_skill_development.md`

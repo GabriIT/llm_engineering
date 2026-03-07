@@ -1,9 +1,15 @@
 from __future__ import annotations
 
+import base64
+import json
 import html
+import os
 import re
+import shutil
 import subprocess
+import tempfile
 import zipfile
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 from xml.etree import ElementTree as ET
@@ -39,7 +45,20 @@ try:
 except Exception:
     RapidOCR = None
 
+try:
+    import requests
+except Exception:
+    requests = None
+
+try:
+    from pptx import Presentation
+except Exception:
+    Presentation = None
+
 PDF_PAGE_DENSITY_MIN = 30.0
+PPTX_XML_TEXT_NS = {"a": "http://schemas.openxmlformats.org/drawingml/2006/main"}
+PPTX_REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
+PPTX_NOTES_REL_SUFFIX = "/relationships/notesSlide"
 
 OCR_GUIDANCE = (
     "This PDF looks scanned/image-only. Alternatives: run OCR first (ocrmypdf + tesseract), "
@@ -56,6 +75,23 @@ LOW_TEXT_GUIDANCE = (
     "Extraction is weak. Re-parse with an alternate backend and keep the better output by "
     "text quality score."
 )
+PPTX_LOCAL_VISION_GUIDANCE = (
+    "Optional PPTX vision enrichment requires `libreoffice`, `poppler-utils`, and `requests`."
+)
+PPTX_VISION_PROVIDER_GUIDANCE = (
+    "PPTX vision enrichment currently supports `ollama` via HTTP at OLLAMA_URL/OLLAMA_HOST."
+)
+
+
+@dataclass(slots=True)
+class _PptxSlideRecord:
+    slide_number: int
+    slide_title: str
+    text: str
+    content_chars: int
+    low_text: bool
+    has_notes: bool
+    shape_count: int
 
 
 def _normalize_text(raw: str) -> str:
@@ -126,6 +162,18 @@ def _result(
 
 
 def _iter_supported_files(config: ParseConfig) -> list[Path]:
+    if config.include_paths:
+        filtered = []
+        seen: set[Path] = set()
+        for path in config.include_paths:
+            resolved = Path(path).expanduser().resolve()
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            if resolved.is_file() and resolved.suffix.lower() in config.supported_extensions:
+                filtered.append(resolved)
+        return sorted(filtered)
+
     pattern = "**/*" if config.recursive else "*"
     files = [
         path
@@ -691,6 +739,523 @@ def parse_xlsx_file(path: Path, config: ParseConfig) -> tuple[list[Document], Fi
     )
 
 
+def _pptx_guess_slide_title(slide, default: str) -> str:
+    try:
+        title_shape = getattr(slide.shapes, "title", None)
+        if title_shape is not None:
+            title_text = _normalize_text(getattr(title_shape, "text", "") or "")
+            if title_text:
+                return title_text
+    except Exception:
+        pass
+
+    for shape in slide.shapes:
+        text = _normalize_text(getattr(shape, "text", "") or "")
+        if text:
+            first_line = text.split("\n", 1)[0].strip()
+            if first_line:
+                return first_line
+    return default
+
+
+def _pptx_shape_text(shape) -> str:
+    sections: list[str] = []
+    if getattr(shape, "has_table", False):
+        try:
+            rows: list[str] = []
+            for row in shape.table.rows:
+                values = []
+                for cell in row.cells:
+                    text = _normalize_text(getattr(cell, "text", "") or "")
+                    if text:
+                        values.append(text)
+                if values:
+                    rows.append(" | ".join(values))
+            if rows:
+                sections.append("\n".join(rows))
+        except Exception:
+            pass
+
+    text_direct = _normalize_text(getattr(shape, "text", "") or "")
+    if text_direct:
+        sections.append(text_direct)
+    return _normalize_text("\n\n".join(sections))
+
+
+def _pptx_slide_notes(slide) -> str:
+    try:
+        notes_slide = getattr(slide, "notes_slide", None)
+        if notes_slide is None:
+            return ""
+        notes_frame = getattr(notes_slide, "notes_text_frame", None)
+        if notes_frame is None:
+            return ""
+        return _normalize_text(notes_frame.text or "")
+    except Exception:
+        return ""
+
+
+def _build_pptx_slide_record(
+    *,
+    slide_number: int,
+    slide_title: str,
+    body_text: str,
+    notes_text: str,
+    shape_count: int,
+    min_chars_pptx_slide: int,
+) -> _PptxSlideRecord:
+    sections = [f"Slide title: {slide_title}"]
+    if body_text:
+        sections.append(body_text)
+    if notes_text:
+        sections.append(f"Speaker notes:\n{notes_text}")
+    page_text = _normalize_text("\n\n".join(sections))
+    content_chars = len(body_text) + len(notes_text)
+    return _PptxSlideRecord(
+        slide_number=slide_number,
+        slide_title=slide_title,
+        text=page_text,
+        content_chars=content_chars,
+        low_text=content_chars < min_chars_pptx_slide,
+        has_notes=bool(notes_text),
+        shape_count=shape_count,
+    )
+
+
+def _parse_pptx_with_python_pptx(
+    path: Path, config: ParseConfig
+) -> tuple[list[_PptxSlideRecord], int]:
+    if Presentation is None:
+        raise RuntimeError("python-pptx is unavailable")
+
+    prs = Presentation(str(path))
+    records: list[_PptxSlideRecord] = []
+    total_chars = 0
+
+    for idx, slide in enumerate(prs.slides, start=1):
+        title = _pptx_guess_slide_title(slide, f"Slide {idx}")
+        text_parts: list[str] = []
+        for shape in slide.shapes:
+            shape_text = _pptx_shape_text(shape)
+            if shape_text:
+                text_parts.append(shape_text)
+        body_text = _normalize_text("\n\n".join(text_parts))
+        notes_text = _pptx_slide_notes(slide)
+        record = _build_pptx_slide_record(
+            slide_number=idx,
+            slide_title=title,
+            body_text=body_text,
+            notes_text=notes_text,
+            shape_count=len(slide.shapes),
+            min_chars_pptx_slide=config.min_chars_pptx_slide,
+        )
+        records.append(record)
+        total_chars += len(record.text)
+    return records, total_chars
+
+
+def _pptx_slide_xml_paths(zf: zipfile.ZipFile) -> list[tuple[int, str]]:
+    pattern = re.compile(r"^ppt/slides/slide(\d+)\.xml$")
+    result: list[tuple[int, str]] = []
+    for name in zf.namelist():
+        match = pattern.match(name)
+        if match:
+            result.append((int(match.group(1)), name))
+    return sorted(result, key=lambda item: item[0])
+
+
+def _pptx_xml_text(blob: bytes) -> list[str]:
+    root = ET.fromstring(blob)
+    values = []
+    for node in root.findall(".//a:t", PPTX_XML_TEXT_NS):
+        text = _normalize_text(node.text or "")
+        if text:
+            values.append(text)
+    return values
+
+
+def _pptx_notes_xml_path(zf: zipfile.ZipFile, slide_number: int) -> str | None:
+    rel_path = f"ppt/slides/_rels/slide{slide_number}.xml.rels"
+    if rel_path not in zf.namelist():
+        return None
+    root = ET.fromstring(zf.read(rel_path))
+    for rel in root.findall(f"{{{PPTX_REL_NS}}}Relationship"):
+        rel_type = rel.attrib.get("Type", "")
+        if not rel_type.endswith(PPTX_NOTES_REL_SUFFIX):
+            continue
+        target = rel.attrib.get("Target", "").strip()
+        if not target:
+            continue
+        normalized = target.lstrip("/")
+        if normalized.startswith("../"):
+            normalized = normalized[3:]
+        if not normalized.startswith("ppt/"):
+            normalized = f"ppt/{normalized}"
+        if normalized in zf.namelist():
+            return normalized
+    return None
+
+
+def _parse_pptx_xml_fallback(path: Path, config: ParseConfig) -> tuple[list[_PptxSlideRecord], int]:
+    records: list[_PptxSlideRecord] = []
+    total_chars = 0
+    with zipfile.ZipFile(path) as zf:
+        for slide_number, slide_xml_path in _pptx_slide_xml_paths(zf):
+            texts = _pptx_xml_text(zf.read(slide_xml_path))
+            body_text = _normalize_text("\n\n".join(texts))
+            notes_text = ""
+            notes_path = _pptx_notes_xml_path(zf, slide_number)
+            if notes_path:
+                notes_text = _normalize_text("\n\n".join(_pptx_xml_text(zf.read(notes_path))))
+
+            title = texts[0] if texts else f"Slide {slide_number}"
+            record = _build_pptx_slide_record(
+                slide_number=slide_number,
+                slide_title=title,
+                body_text=body_text,
+                notes_text=notes_text,
+                shape_count=0,
+                min_chars_pptx_slide=config.min_chars_pptx_slide,
+            )
+            records.append(record)
+            total_chars += len(record.text)
+    return records, total_chars
+
+
+def _pptx_records_to_docs(records: list[_PptxSlideRecord], base: dict) -> list[Document]:
+    docs: list[Document] = []
+    for record in records:
+        metadata = dict(base)
+        metadata["slide_number"] = record.slide_number
+        metadata["slide_title"] = record.slide_title
+        metadata["slide_has_notes"] = record.has_notes
+        metadata["visual_enriched"] = False
+        metadata["shape_count"] = record.shape_count
+        docs.append(Document(page_content=record.text, metadata=metadata))
+    return docs
+
+
+def _ollama_url() -> str:
+    return (os.getenv("OLLAMA_URL") or os.getenv("OLLAMA_HOST") or "http://127.0.0.1:11434").rstrip("/")
+
+
+def _require_binary(name: str) -> None:
+    if shutil.which(name) is None:
+        raise RuntimeError(f"Required binary '{name}' not found")
+
+
+def _render_pptx_slide_images(path: Path, temp_dir: Path) -> list[Path]:
+    _require_binary("libreoffice")
+    _require_binary("pdftoppm")
+
+    pdf_dir = temp_dir / "pdf"
+    img_dir = temp_dir / "slides"
+    pdf_dir.mkdir(parents=True, exist_ok=True)
+    img_dir.mkdir(parents=True, exist_ok=True)
+
+    proc = subprocess.run(
+        [
+            "libreoffice",
+            "--headless",
+            "--convert-to",
+            "pdf",
+            "--outdir",
+            str(pdf_dir),
+            str(path),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(proc.stderr.strip() or "libreoffice conversion failed")
+
+    pdf_path = pdf_dir / f"{path.stem}.pdf"
+    if not pdf_path.exists():
+        raise RuntimeError(f"Expected rendered PDF not found: {pdf_path}")
+
+    prefix = img_dir / "slide"
+    proc = subprocess.run(
+        ["pdftoppm", "-png", "-r", "200", str(pdf_path), str(prefix)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(proc.stderr.strip() or "pdftoppm failed")
+
+    pattern = re.compile(r"^slide-(\d+)\.png$")
+    slide_images = []
+    for image_path in img_dir.glob("slide-*.png"):
+        match = pattern.match(image_path.name)
+        if not match:
+            continue
+        slide_images.append((int(match.group(1)), image_path))
+    return [path for _, path in sorted(slide_images, key=lambda item: item[0])]
+
+
+def _ollama_vision_summary(
+    *,
+    model: str,
+    image_path: Path,
+    slide_title: str,
+    text_context: str,
+) -> tuple[str, list[str]]:
+    if requests is None:
+        raise RuntimeError("requests is unavailable")
+
+    prompt = (
+        "Return JSON with keys visual_summary (string) and key_facts (array of short strings). "
+        "Ground only in visible evidence from this slide image and provided text context. "
+        f"Slide title: {slide_title}\n"
+        f"Extracted text context:\n{text_context[:3500]}"
+    )
+    schema = {
+        "type": "object",
+        "properties": {
+            "visual_summary": {"type": "string"},
+            "key_facts": {"type": "array", "items": {"type": "string"}},
+        },
+        "required": ["visual_summary", "key_facts"],
+    }
+    with image_path.open("rb") as f:
+        image_b64 = base64.b64encode(f.read()).decode("utf-8")
+
+    payload = {
+        "model": model,
+        "prompt": prompt,
+        "stream": False,
+        "images": [image_b64],
+        "format": schema,
+    }
+    response = requests.post(f"{_ollama_url()}/api/generate", json=payload, timeout=180)
+    response.raise_for_status()
+    body = response.json()
+    data = json.loads(body.get("response", "{}"))
+    summary = _normalize_text(str(data.get("visual_summary", "")))
+    facts = []
+    for fact in data.get("key_facts", []):
+        fact_text = _normalize_text(str(fact))
+        if fact_text:
+            facts.append(fact_text)
+    return summary, facts
+
+
+def _pptx_should_try_vision(records: list[_PptxSlideRecord], config: ParseConfig) -> bool:
+    if not records:
+        return False
+    if config.pptx_enable_vision:
+        return True
+    low_count = sum(1 for record in records if record.low_text)
+    return (low_count / len(records)) >= config.pptx_vision_trigger_ratio
+
+
+def _enrich_pptx_docs_with_vision(
+    *,
+    path: Path,
+    docs: list[Document],
+    records: list[_PptxSlideRecord],
+    config: ParseConfig,
+    issues: list[ParseIssue],
+) -> bool:
+    if config.pptx_vision_provider.lower() != "ollama":
+        issues.append(
+            ParseIssue(
+                severity="warning",
+                code="pptx_vision_skipped",
+                message=f"Unsupported vision provider: {config.pptx_vision_provider}",
+                suggested_action=PPTX_VISION_PROVIDER_GUIDANCE,
+            )
+        )
+        return False
+
+    low_records = [record for record in records if record.low_text]
+    selected = low_records[: max(1, config.pptx_vision_max_slides)]
+    if not selected:
+        issues.append(
+            ParseIssue(
+                severity="warning",
+                code="pptx_vision_skipped",
+                message="No low-text slides selected for vision enrichment.",
+                suggested_action="Enable --enable-vision to force slide enrichment.",
+            )
+        )
+        return False
+
+    try:
+        with tempfile.TemporaryDirectory(prefix="myrag_pptx_vision_") as tmp:
+            images = _render_pptx_slide_images(path, Path(tmp))
+            image_by_slide = {idx: image for idx, image in enumerate(images, start=1)}
+
+            enriched_count = 0
+            for record in selected:
+                image_path = image_by_slide.get(record.slide_number)
+                if image_path is None:
+                    continue
+                summary, facts = _ollama_vision_summary(
+                    model=config.pptx_vision_model,
+                    image_path=image_path,
+                    slide_title=record.slide_title,
+                    text_context=record.text,
+                )
+                if not summary and not facts:
+                    continue
+
+                for doc in docs:
+                    if doc.metadata.get("slide_number") != record.slide_number:
+                        continue
+                    chunks = [doc.page_content]
+                    if summary:
+                        chunks.append(f"Visual summary:\n{summary}")
+                    if facts:
+                        bullets = "\n".join(f"- {fact}" for fact in facts)
+                        chunks.append(f"Visual key facts:\n{bullets}")
+                    doc.page_content = _normalize_text("\n\n".join(chunks))
+                    doc.metadata["visual_enriched"] = True
+                    enriched_count += 1
+                    break
+
+            if enriched_count > 0:
+                issues.append(
+                    ParseIssue(
+                        severity="warning",
+                        code="pptx_vision_applied",
+                        message=f"Applied vision enrichment to {enriched_count} low-text slide(s).",
+                        suggested_action="Review enriched slide summaries for factual grounding.",
+                    )
+                )
+                return True
+    except Exception as exc:
+        issues.append(
+            ParseIssue(
+                severity="warning",
+                code="pptx_vision_failed",
+                message=f"Vision enrichment failed: {exc}",
+                suggested_action=f"{PPTX_LOCAL_VISION_GUIDANCE} {PPTX_VISION_PROVIDER_GUIDANCE}",
+            )
+        )
+        return False
+
+    issues.append(
+        ParseIssue(
+            severity="warning",
+            code="pptx_vision_skipped",
+            message="Vision enrichment ran but no additional visual content was extracted.",
+            suggested_action="Retry with a stronger vision model or increase max vision slides.",
+        )
+    )
+    return False
+
+
+def parse_pptx_file(path: Path, config: ParseConfig) -> tuple[list[Document], FileParseResult]:
+    extension = path.suffix.lower()
+    base = _base_metadata(config, path)
+    issues: list[ParseIssue] = []
+    parser_used = "python-pptx"
+    fallback_used = False
+
+    primary_records: list[_PptxSlideRecord] = []
+    primary_chars = 0
+    primary_error: Exception | None = None
+    try:
+        primary_records, primary_chars = _parse_pptx_with_python_pptx(path, config)
+    except Exception as exc:
+        primary_error = exc
+        text = str(exc).lower()
+        missing_dep = "python-pptx" in text or "no module named" in text
+        issues.append(
+            ParseIssue(
+                severity="warning",
+                code="pptx_primary_parser_unavailable" if missing_dep else "pptx_primary_parser_failed",
+                message=f"python-pptx parser failed: {exc}",
+                suggested_action=(
+                    "Install `python-pptx` for primary PPTX parsing. " + LOW_TEXT_GUIDANCE
+                    if missing_dep
+                    else LOW_TEXT_GUIDANCE
+                ),
+            )
+        )
+
+    chosen_records = primary_records
+    chosen_chars = primary_chars
+    if primary_error is not None or primary_chars < config.min_chars_pptx:
+        fallback_used = True
+        try:
+            fallback_records, fallback_chars = _parse_pptx_xml_fallback(path, config)
+            if fallback_chars >= chosen_chars:
+                chosen_records = fallback_records
+                chosen_chars = fallback_chars
+                parser_used = "pptx_xml_fallback"
+        except Exception as exc:
+            issues.append(
+                ParseIssue(
+                    severity="warning",
+                    code="pptx_xml_fallback_failed",
+                    message=f"PPTX XML fallback failed: {exc}",
+                    suggested_action="Validate the PPTX file and retry with repaired export.",
+                )
+            )
+
+    docs = _pptx_records_to_docs(chosen_records, base)
+
+    vision_applied = False
+    if docs and _pptx_should_try_vision(chosen_records, config):
+        vision_applied = _enrich_pptx_docs_with_vision(
+            path=path,
+            docs=docs,
+            records=chosen_records,
+            config=config,
+            issues=issues,
+        )
+
+    status: ParseStatus = "success"
+    if chosen_chars == 0 or len(docs) == 0:
+        status = "failed"
+        issues.append(
+            ParseIssue(
+                severity="error",
+                code="pptx_no_extractable_text",
+                message="No extractable text from PPTX file.",
+                suggested_action=(
+                    "Re-export the deck to PPTX/PDF, then retry. "
+                    "For image-heavy decks, enable vision enrichment."
+                ),
+            )
+        )
+    else:
+        low_count = sum(1 for record in chosen_records if record.low_text)
+        low_ratio = (low_count / len(chosen_records)) if chosen_records else 0.0
+        if chosen_chars < config.min_chars_pptx or (
+            low_ratio >= config.pptx_vision_trigger_ratio and not vision_applied
+        ):
+            status = "warning"
+            issues.append(
+                ParseIssue(
+                    severity="warning",
+                    code="pptx_low_text",
+                    message=(
+                        "PPTX extraction quality is below threshold for part of the deck; "
+                        "consider enabling selective vision enrichment."
+                    ),
+                    suggested_action=(
+                        "Enable vision mode for low-text slides or enrich externally, then re-run."
+                    ),
+                )
+            )
+
+    _annotate_docs(docs, parser_used, fallback_used, status, chosen_chars)
+    return docs, _result(
+        path=path,
+        extension=extension,
+        status=status,
+        parser_used=parser_used,
+        fallback_used=fallback_used,
+        extracted_chars=chosen_chars,
+        documents_count=len(docs),
+        issues=issues,
+    )
+
+
 def parse_knowledge_base(config: ParseConfig) -> tuple[list[Document], list[FileParseResult]]:
     if not config.knowledge_root.exists():
         raise FileNotFoundError(f"Knowledge root does not exist: {config.knowledge_root}")
@@ -701,6 +1266,7 @@ def parse_knowledge_base(config: ParseConfig) -> tuple[list[Document], list[File
         ".pdf": parse_pdf_file,
         ".docx": parse_docx_file,
         ".xlsx": parse_xlsx_file,
+        ".pptx": parse_pptx_file,
     }
 
     documents: list[Document] = []

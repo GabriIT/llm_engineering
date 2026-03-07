@@ -1,13 +1,109 @@
 # competitors
 
-- generated_at: 2026-03-02T11:48:32.683117+00:00
+- generated_at: 2026-03-07T06:54:45.762783+00:00
 - knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge
 
 ## Summary
-- sources: 1
-- segments: 2
-- characters: 13454
+- sources: 2
+- segments: 4
+- characters: 18819
 - failed_files: 0
+
+## Source: 04052024_Akulon_Ultraflow_K-FKGS6_B.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/competitors/04052024_Akulon_Ultraflow_K-FKGS6_B.pdf
+- source_ext: .pdf
+- parser_used: PyPDFLoader
+- fallback_used: False
+- parse_status: success
+- extracted_chars: 5365
+
+### Segment 1 (page 1)
+
+Property Data
+Akulon® Ultraflow K-FKGS6 /B
+PA6-GF30 FR(17)
+30% Glass Reinforced, Heat Stabilized, Flame Retardant, High Flow
+Print Date: 2022-07-26
+Properties Typical Data Unit Test Method
+Rheological properties dry / cond
+Molding shrinkage [parallel] 0.21 / * % Sim. to ISO 294-4
+Molding shrinkage [normal] 0.77 / * % Sim. to ISO 294-4
+Mechanical properties dry / cond
+Tensile modulus 12000 / 8300 MPa ISO 527-1/-2
+Stress at break 155 / 105 MPa ISO 527-1/-2
+Strain at break 2.3 / 3.6 % ISO 527-1/-2
+Flexural modulus 11500 / 8000 MPa ISO 178
+Flexural strength 240 / 165 MPa ISO 178
+Charpy impact strength (+23°C) 55 / 55 kJ/m² ISO 179/1eU
+Charpy impact strength (-30°C) 60 / 60 kJ/m² ISO 179/1eU
+Charpy notched impact strength (+23°C) 12 / 14 kJ/m² ISO 179/1eA
+Charpy notched impact strength (-30°C) 12 / 12 kJ/m² ISO 179/1eA
+Thermal properties dry / cond
+Melting temperature (10°C/min) 220 / * °C ISO 11357-1/-3
+Temp. of deflection under load (1.80 MPa) 205 / * °C ISO 75-1/-2
+Temp. of deflection under load (0.45 MPa) 215 / * °C ISO 75-1/-2
+Coeff. of linear therm. expansion (parallel) 0.2 / * E-4/°C ISO 11359-1/-2
+Coeff. of linear therm. expansion (normal) 1.1 / * E-4/°C ISO 11359-1/-2
+Burning Behav. at 1.5 mm nom. thickn. V-0 / * class IEC 60695-11-10
+Thickness tested 1.5 / * mm IEC 60695-11-10
+Burning Behav. at 3.0 mm nom. thickn. V-0 / * class IEC 60695-11-10
+Akulon®, Arnite®, Arnitel®, EcoPaXX®, ForTii®, Novamid®, Stanyl®, UDea™ and Xytron™ are trademarks of DSM.
+Seller represents and warrants exclusively that on the date of delivery by Seller the product shall be in conformity with the
+specifications agreed upon. Seller makes no other representations or warranties, whether express or implied.
+Seller is not responsible or liable for the design of the products of the Customer and it is the responsibility of the Customer to
+determine that the Seller’s product is safe, complies with application laws and regulations, and is technically or otherwise fit
+for its intended use. Seller does not endorse or claim suitability of its products for a specific application and disclaims each
+and every representation or warranty, whether express or implied, in that respect.
+Typical values are indicative only and are not to be construed as being binding specifications. Colorants in the product or
+other additives may cause significant variations in typical values. This document replaces all previous versions relating to this
+subject.
+Copyright © DSM 2022. All rights reserved. No part of the information may be reproduced, distributed, or transmitted in any
+form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior
+written permission of DSM.
+
+### Segment 2 (page 2)
+
+Property Data
+Akulon® Ultraflow K-FKGS6 /B
+Print Date: 2022-07-26
+Properties Typical Data Unit Test Method
+Thickness tested 3 / * mm IEC 60695-11-10
+Burning Behav. at 0.75 mm nom. thickn. V-0 / * class IEC 60695-11-10
+Thickness tested 0.75 / * mm IEC 60695-11-10
+Oxygen index 30 / * % ISO 4589-1/-2
+Glow Wire Flammability Index GWFI 960 / - °C IEC 60695-2-12
+GWFI (Thickness (1) tested) 0.75 / - mm IEC 60695-2-12
+Glow Wire Flammability Index GWFI 960 / - °C IEC 60695-2-12
+GWFI (Thickness (2) tested) 3 / - mm IEC 60695-2-12
+Glow Wire Ignition Temperature GWIT 800 / - °C IEC 60695-2-13
+GWIT (Thickness (1) tested) 0.75 / - mm IEC 60695-2-13
+Glow Wire Ignition Temperature GWIT 800 / - °C IEC 60695-2-13
+GWIT (Thickness (2) tested) 1.5 / - mm IEC 60695-2-13
+Electrical properties dry / cond
+Relative permittivity (100Hz) 3.5 / 10 - IEC 62631-2-1
+Relative permittivity (1 MHz) 3.4 / 4 - IEC 62631-2-1
+Dissipation factor (100 Hz) 60 / 3000 E-4 IEC 62631-2-1
+Dissipation factor (1 MHz) 120 / 700 E-4 IEC 62631-2-1
+Volume resistivity 1E13 / 1E11 Ohm*m IEC 62631-3-1
+Surface resistivity - / 1E14 Ohm IEC 62631-3-2
+Comparative tracking index 325 / - V IEC 60112
+Other properties dry / cond
+Water absorption 4.5 / * % Sim. to ISO 62
+Humidity absorption 1.3 / * % Sim. to ISO 62
+Density 1550 / - kg/m³ ISO 1183
+Akulon®, Arnite®, Arnitel®, EcoPaXX®, ForTii®, Novamid®, Stanyl®, UDea™ and Xytron™ are trademarks of DSM.
+Seller represents and warrants exclusively that on the date of delivery by Seller the product shall be in conformity with the
+specifications agreed upon. Seller makes no other representations or warranties, whether express or implied.
+Seller is not responsible or liable for the design of the products of the Customer and it is the responsibility of the Customer to
+determine that the Seller’s product is safe, complies with application laws and regulations, and is technically or otherwise fit
+for its intended use. Seller does not endorse or claim suitability of its products for a specific application and disclaims each
+and every representation or warranty, whether express or implied, in that respect.
+Typical values are indicative only and are not to be construed as being binding specifications. Colorants in the product or
+other additives may cause significant variations in typical values. This document replaces all previous versions relating to this
+subject.
+Copyright © DSM 2022. All rights reserved. No part of the information may be reproduced, distributed, or transmitted in any
+form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior
+written permission of DSM.
 
 ## Source: Competitor Price from Monthly Report_I&C.xlsx
 - source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/competitors/Competitor Price from Monthly Report_I&C.xlsx

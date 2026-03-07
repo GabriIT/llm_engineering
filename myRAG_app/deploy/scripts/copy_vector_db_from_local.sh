@@ -4,7 +4,13 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
-LOCAL_DB_PATH="$REPO_ROOT/myRAG_app/vector_db"
+if [[ -f "$REPO_ROOT/.env" ]]; then
+  set -a
+  source "$REPO_ROOT/.env"
+  set +a
+fi
+
+LOCAL_DB_PATH="${MYRAG_DB_PATH:-$REPO_ROOT/myRAG_app/vector_db}"
 REMOTE_HOST=""
 REMOTE_USER="$USER"
 REMOTE_PORT="22"
@@ -12,7 +18,7 @@ REMOTE_DB_PATH=""
 MODE="none"
 REMOTE_REPO_PATH=""
 REMOTE_PYTHON_BIN=".venv/bin/python"
-COLLECTION="myrag_docs"
+COLLECTION="${MYRAG_COLLECTION:-myrag_docs}"
 COMPOSE_PROJECT_DIR="/opt/myrag"
 COMPOSE_FILE="myRAG_app/deploy/docker-compose.yml"
 SYSTEMD_SERVICE="myrag-api"
@@ -70,13 +76,13 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       cat <<USAGE
 Usage: copy_vector_db_from_local.sh --remote-host HOST --remote-db-path PATH [options]
-  --local-db-path PATH       Local vector_db path (default: repo myRAG_app/vector_db)
+  --local-db-path PATH       Local vector_db path (default: MYRAG_DB_PATH from .env or repo myRAG_app/vector_db)
   --remote-user USER         SSH user (default: current user)
   --remote-port PORT         SSH port (default: 22)
   --mode MODE                Restart mode: none|compose|systemd (default: none)
   --remote-repo-path PATH    If set, run remote inspect_cli after sync
   --remote-python-bin PATH   Remote python binary used for inspect_cli
-  --collection NAME          Chroma collection for inspect (default: myrag_docs)
+  --collection NAME          Chroma collection for inspect (default: MYRAG_COLLECTION from .env or myrag_docs)
 USAGE
       exit 0
       ;;

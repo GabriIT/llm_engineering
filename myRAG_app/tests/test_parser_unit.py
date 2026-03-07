@@ -35,6 +35,7 @@ class ParserUnitTests(unittest.TestCase):
             (root / "kb" / "a.pdf").write_bytes(b"%PDF-1.4")
             _make_minimal_docx(root / "kb" / "b.docx", "docx text")
             (root / "kb" / "c.xlsx").write_bytes(b"PK")
+            (root / "kb" / "d.pptx").write_bytes(b"PK")
             (root / "kb" / "ignore.txt").write_text("ignored", encoding="utf-8")
 
             config = ParseConfig(knowledge_root=root)
@@ -60,15 +61,17 @@ class ParserUnitTests(unittest.TestCase):
                 patch("myRAG_app.parser.parsers.parse_pdf_file", side_effect=_fake(".pdf")) as m_pdf,
                 patch("myRAG_app.parser.parsers.parse_docx_file", side_effect=_fake(".docx")) as m_docx,
                 patch("myRAG_app.parser.parsers.parse_xlsx_file", side_effect=_fake(".xlsx")) as m_xlsx,
+                patch("myRAG_app.parser.parsers.parse_pptx_file", side_effect=_fake(".pptx")) as m_pptx,
             ):
                 docs, results = parse_knowledge_base(config)
 
             self.assertEqual(1, m_pdf.call_count)
             self.assertEqual(1, m_docx.call_count)
             self.assertEqual(1, m_xlsx.call_count)
-            self.assertEqual(3, len(results))
-            self.assertEqual(3, len(docs))
-            self.assertEqual({".pdf", ".docx", ".xlsx"}, {result.extension for result in results})
+            self.assertEqual(1, m_pptx.call_count)
+            self.assertEqual(4, len(results))
+            self.assertEqual(4, len(docs))
+            self.assertEqual({".pdf", ".docx", ".xlsx", ".pptx"}, {result.extension for result in results})
 
     def test_docx_thresholds_trigger_warning(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -152,7 +155,43 @@ class ParserUnitTests(unittest.TestCase):
             self.assertEqual(special.name, docs[0].metadata["source_name"])
             self.assertEqual(str(special), docs[0].metadata["source"])
 
+    def test_include_paths_processes_only_selected_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "kb").mkdir(parents=True)
+            selected = root / "kb" / "keep.pdf"
+            ignored = root / "kb" / "skip.docx"
+            selected.write_bytes(b"%PDF-1.4")
+            _make_minimal_docx(ignored, "ignore me")
+
+            config = ParseConfig(knowledge_root=root, include_paths=[selected])
+
+            def _fake_pdf(path: Path, _config: ParseConfig):
+                doc = Document(page_content="ok", metadata={"source": str(path)})
+                result = FileParseResult(
+                    source_path=str(path),
+                    extension=".pdf",
+                    status="success",
+                    parser_used="pdf_parser",
+                    fallback_used=False,
+                    extracted_chars=2,
+                    documents_count=1,
+                    issues=[],
+                )
+                return [doc], result
+
+            with (
+                patch("myRAG_app.parser.parsers.parse_pdf_file", side_effect=_fake_pdf) as m_pdf,
+                patch("myRAG_app.parser.parsers.parse_docx_file") as m_docx,
+            ):
+                docs, results = parse_knowledge_base(config)
+
+            self.assertEqual(1, m_pdf.call_count)
+            self.assertEqual(0, m_docx.call_count)
+            self.assertEqual(1, len(docs))
+            self.assertEqual(1, len(results))
+            self.assertEqual(str(selected), results[0].source_path)
+
 
 if __name__ == "__main__":
     unittest.main()
-

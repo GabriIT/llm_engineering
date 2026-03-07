@@ -1,0 +1,4 @@
+interface:
+  display_name: "PPTX RAG Parser"
+  short_description: "Parse PPTX files for myRAG RAG ingestion"
+  default_prompt: "Use $pptx-rag-parser to parse PowerPoint files with text-first extraction and optional selective vision enrichment for myRAG_app."

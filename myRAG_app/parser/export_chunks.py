@@ -55,6 +55,7 @@ def _chunk_id(metadata: dict, chunk_index: int) -> str:
             str(metadata.get("source_name", "")),
             str(metadata.get("page_number", "")),
             str(metadata.get("sheet_name", "")),
+            str(metadata.get("slide_number", "")),
             str(chunk_index),
         ]
     )
@@ -113,4 +114,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

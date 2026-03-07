@@ -9,5 +9,31 @@ if [[ ! -x "$PYTHON_BIN" ]]; then
   exit 2
 fi
 
-"$PYTHON_BIN" -m myRAG_app.vector.ingest_cli "$@"
+if [[ -f "$ROOT_DIR/.env" ]]; then
+  set -a
+  source "$ROOT_DIR/.env"
+  set +a
+fi
 
+# shellcheck source=/dev/null
+source "$ROOT_DIR/myRAG_app/scripts/knowledge_root_bootstrap.sh"
+myrag_set_knowledge_roots "$ROOT_DIR"
+myrag_refresh_indexed_knowledge "$ROOT_DIR"
+myrag_enforce_or_inject_knowledge_root "$PYTHON_BIN" "$@"
+
+has_db=0
+has_collection=0
+for arg in "$@"; do
+  [[ "$arg" == "--db-path" ]] && has_db=1
+  [[ "$arg" == "--collection" ]] && has_collection=1
+done
+
+EXTRA_ARGS=()
+if [[ $has_db -eq 0 && -n "${MYRAG_DB_PATH:-}" ]]; then
+  EXTRA_ARGS+=(--db-path "$MYRAG_DB_PATH")
+fi
+if [[ $has_collection -eq 0 && -n "${MYRAG_COLLECTION:-}" ]]; then
+  EXTRA_ARGS+=(--collection "$MYRAG_COLLECTION")
+fi
+
+"$PYTHON_BIN" -m myRAG_app.vector.ingest_cli "${MYRAG_KNOWLEDGE_EXTRA_ARGS[@]}" "${EXTRA_ARGS[@]}" "$@"

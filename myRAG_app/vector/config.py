@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-DEFAULT_DB_PATH = PROJECT_ROOT / "vector_db"
-DEFAULT_COLLECTION_NAME = "myrag_docs"
+DEFAULT_DB_PATH = Path(
+    os.getenv("MYRAG_DB_PATH", str(PROJECT_ROOT / "vector_db"))
+).expanduser().resolve()
+DEFAULT_COLLECTION_NAME = os.getenv("MYRAG_COLLECTION", "myrag_docs")
 
 DEFAULT_EMBEDDING_MODEL = "text-embedding-3-large"
 DEFAULT_CHAT_MODEL = "gpt-4.1-nano"

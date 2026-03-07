@@ -3,8 +3,30 @@
 ## Purpose
 This app contains a robust parsing pipeline for a mixed-format RAG knowledge base, a reusable parsing skill module, and local Chroma vectorstore integration for retrieval with LangChain.
 
+## Vectorstore Env Defaults
+1. Wrapper scripts auto-load repo `.env` and use `MYRAG_DB_PATH` and `MYRAG_COLLECTION` when `--db-path`/`--collection` are omitted.
+2. This applies to:
+- `myRAG_app/skills/parsing-output-guardian/scripts/build_vectorstore.sh`
+- `myRAG_app/skills/parsing-output-guardian/scripts/inspect_vectorstore.sh`
+- `myRAG_app/skills/parsing-output-guardian/scripts/query_vectorstore.sh`
+- `myRAG_app/skills/pptx-rag-parser/scripts/build_vectorstore_with_pptx.sh`
+- `myRAG_app/deploy/scripts/rollback_vector_db.sh`
+- `myRAG_app/deploy/scripts/build_vector_db_vps.sh`
+- `myRAG_app/deploy/scripts/copy_vector_db_from_local.sh`
+- `myRAG_app/deploy/scripts/vps_precheck.sh`
+3. Any explicit CLI flag overrides `.env` defaults.
+
+### Quick Env Check
+Run this before ingest/query to confirm active DB target:
+```bash
+cd /home/gabri/udemy/llm_engineering
+set -a; source .env; set +a
+echo "MYRAG_DB_PATH=$MYRAG_DB_PATH"
+echo "MYRAG_COLLECTION=$MYRAG_COLLECTION"
+```
+
 ## Current Parsing Capabilities
-1. Parse `.pdf`, `.docx`, and `.xlsx` from:
+1. Parse `.pdf`, `.docx`, `.xlsx`, and `.pptx` from:
 `/home/gabri/udemy/llm_engineering/myRAG_knowledge`
 2. Apply format-specific fallback strategies.
 3. Apply OCR fallback for scan-like/image-only PDFs.
@@ -20,12 +42,12 @@ Run commands from repository root:
 
 ### 1. Install primary parser libraries
 ```bash
-uv pip install --python .venv/bin/python pypdf docx2txt openpyxl
+uv pip install --python .venv/bin/python pypdf docx2txt openpyxl python-pptx requests
 ```
 
 ### 2. Verify imports
 ```bash
-.venv/bin/python -c "import pypdf, docx2txt, openpyxl; print('imports_ok')"
+.venv/bin/python -c "import pypdf, docx2txt, openpyxl, pptx; print('imports_ok')"
 ```
 
 ### 3. Run parser audit (before OCR fallback integration)
@@ -79,6 +101,13 @@ PY
 .venv/bin/python -m myRAG_app.parser.export_chunks \
   --knowledge-root /home/gabri/udemy/llm_engineering/myRAG_knowledge \
   --output-path /tmp/myrag_chunks.jsonl
+```
+
+### 8b. Probe a single PPTX before full ingestion
+```bash
+.venv/bin/python -m myRAG_app.parser.pptx_probe \
+  --pptx-path "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Metal_Replacement/202401 - Metal Replacement.pptx" \
+  --report-path /tmp/myrag_pptx_probe.json
 ```
 
 ### 9. Create parsing skill module
@@ -170,18 +199,49 @@ Detailed parsing + upgrade + rollback runbook:
 If a new upgrade is not satisfactory, restore a backup:
 ```bash
 cd /home/gabri/udemy/llm_engineering
-bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
-  --active-db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
-  --backup-root /home/gabri/udemy/llm_engineering/myRAG_app/vector_db_backups
+bash myRAG_app/deploy/scripts/rollback_vector_db.sh
 ```
 
 To restore a specific backup folder:
 ```bash
 cd /home/gabri/udemy/llm_engineering
 bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
-  --active-db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
-  --backup-root /home/gabri/udemy/llm_engineering/myRAG_app/vector_db_backups \
   --backup-name vector_db_backup_YYYYMMDD_HHMMSS
+```
+
+Override defaults when needed:
+```bash
+cd /home/gabri/udemy/llm_engineering
+bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
+  --active-db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
+  --backup-root /home/gabri/udemy/llm_engineering/myRAG_app/vector_db_backups
+```
+
+### 16. Upgrade markdown-based vectorstore with backup
+Use this when indexing from markdown snapshots (`myRAG_app/markdown_knowledge`) instead of raw source files.
+
+```bash
+.venv/bin/python -m myRAG_app.vector.markdown_upgrade_cli \
+  --markdown-root /home/gabri/udemy/llm_engineering/myRAG_app/markdown_knowledge \
+  --active-db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db_markdown \
+  --collection myrag_docs_markdown \
+  --build-only
+```
+
+Promote as active markdown DB:
+```bash
+.venv/bin/python -m myRAG_app.vector.markdown_upgrade_cli \
+  --markdown-root /home/gabri/udemy/llm_engineering/myRAG_app/markdown_knowledge \
+  --active-db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db_markdown \
+  --collection myrag_docs_markdown
+```
+
+Inspect markdown DB:
+```bash
+.venv/bin/python -m myRAG_app.vector.inspect_cli \
+  --db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db_markdown \
+  --collection myrag_docs_markdown \
+  --sample 3
 ```
 
 ## New Parsing Agent Skill
@@ -217,6 +277,43 @@ Fix guidance for parsing and OCR failures.
 10. `agents/openai.yaml`
 UI metadata for the skill.
 
+## New PPTX Parsing Skill
+Skill location:
+`myRAG_app/skills/pptx-rag-parser`
+
+Use when `.pptx` decks must be parsed for RAG with text-first extraction and optional selective vision enrichment.
+
+Quick commands:
+```bash
+bash myRAG_app/skills/pptx-rag-parser/scripts/run_incremental_source_markdown_chunks.sh \
+  --knowledge-root /home/gabri/udemy/llm_engineering/myRAG_knowledge \
+  --markdown-output-dir /home/gabri/udemy/llm_engineering/myRAG_app/markdown_knowledge_incremental \
+  --chunks-output-path /tmp/myrag_chunks_incremental.jsonl \
+  --state-path /home/gabri/udemy/llm_engineering/myRAG_app/.state/incremental_source_manifest.json \
+  --report-path /tmp/myrag_incremental_pipeline_report.json \
+  --strict
+```
+
+```bash
+bash myRAG_app/skills/pptx-rag-parser/scripts/run_pptx_probe.sh \
+  --pptx-path "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Metal_Replacement/202401 - Metal Replacement.pptx" \
+  --report-path /tmp/myrag_pptx_probe.json
+```
+
+```bash
+bash myRAG_app/skills/pptx-rag-parser/scripts/run_pptx_audit.sh \
+  --knowledge-root /home/gabri/udemy/llm_engineering/myRAG_knowledge \
+  --report-path /tmp/myrag_parse_report.json \
+  --strict
+```
+
+```bash
+bash myRAG_app/skills/pptx-rag-parser/scripts/build_vectorstore_with_pptx.sh \
+  --knowledge-root /home/gabri/udemy/llm_engineering/myRAG_knowledge \
+  --reset \
+  --strict-parse
+```
+
 ## Daily Usage Commands
 ### Audit
 ```bash
@@ -242,24 +339,18 @@ bash myRAG_app/skills/parsing-output-guardian/scripts/export_parser_chunks.sh \
 ```bash
 bash myRAG_app/skills/parsing-output-guardian/scripts/build_vectorstore.sh \
   --knowledge-root /home/gabri/udemy/llm_engineering/myRAG_knowledge \
-  --db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
-  --collection myrag_docs \
   --reset
 ```
 
 ### Inspect vectorstore
 ```bash
 bash myRAG_app/skills/parsing-output-guardian/scripts/inspect_vectorstore.sh \
-  --db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
-  --collection myrag_docs \
   --sample 3
 ```
 
 ### Query vectorstore
 ```bash
 bash myRAG_app/skills/parsing-output-guardian/scripts/query_vectorstore.sh \
-  --db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
-  --collection myrag_docs \
   --question "What does the LBV-50H ACS certificate state?" \
   --k 12 \
   --search-type mmr \
@@ -267,6 +358,14 @@ bash myRAG_app/skills/parsing-output-guardian/scripts/query_vectorstore.sh \
   --lambda-mult 0.25 \
   --doc-type Certifications \
   --source-contains "LBV-50H"
+```
+
+Explicit override example:
+```bash
+bash myRAG_app/skills/parsing-output-guardian/scripts/query_vectorstore.sh \
+  --db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
+  --collection myrag_docs \
+  --question "What does the LBV-50H ACS certificate state?"
 ```
 
 ## Folder-Level Markdown Export Skill
@@ -413,7 +512,30 @@ echo "OLLAMA_URL=http://127.0.0.1:11434" >> /home/gabri/udemy/llm_engineering/.e
 ```
 
 ### Run Backend API
-From repo root:
+Recommended (loads `.env` explicitly):
+```bash
+cd /home/gabri/udemy/llm_engineering
+.venv/bin/uvicorn myRAG_app.api.server:app --host 0.0.0.0 --port 8000 --env-file .env
+```
+
+Set active vectorstore in `.env`:
+```bash
+MYRAG_DB_PATH=/home/gabri/udemy/llm_engineering/myRAG_app/vector_db
+MYRAG_COLLECTION=myrag_docs
+```
+
+Example for markdown-based vectorstore:
+```bash
+MYRAG_DB_PATH=/home/gabri/udemy/llm_engineering/myRAG_app/vector_db_markdown
+MYRAG_COLLECTION=myrag_docs_markdown
+```
+
+Verify active store used by API:
+```bash
+curl -s http://localhost:8000/api/health
+```
+
+Alternative (if env already exported in current shell):
 ```bash
 .venv/bin/python -m myRAG_app.api.server --host 0.0.0.0 --port 8000
 ```
@@ -467,3 +589,15 @@ npm run test:run
 ## Deployment
 Use the dedicated deployment runbook:
 `myRAG_app/README_deployment.md`
+
+Markdown-first vectorstore workflow:
+`myRAG_app/README_markdown_vectorstore.md`
+
+PPTX skill architecture and export/import runbook:
+`myRAG_app/README_pptx_skill_development.md`
+
+Straight ingest CLI guide (all modes/options):
+`myRAG_app/README_Ingest.md`
+
+New-files workflow guide (source -> vectorstore with alternatives, incl. PPTX):
+`myRAG_app/README_Source_to_VectorStore.md`
