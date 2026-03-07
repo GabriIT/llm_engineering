@@ -2,8 +2,8 @@ import { FormEvent, useState } from "react";
 import type { ChatModelOption } from "../types";
 
 const CHAT_MODEL_OPTIONS: Array<{ value: ChatModelOption; label: string }> = [
-  { value: "gpt-4.1-nano", label: "gpt-4.1-nano (default)" },
-  { value: "qwen3:latest", label: "qwen3:latest (Ollama)" },
+  { value: "gpt-4.1-nano", label: "Fine-T-LLM (default)" },
+  { value: "qwen3.5:9b", label: "qwen3.5:9b (Ollama)" },
   { value: "llama3.2:latest", label: "llama3.2:latest (Ollama)" },
 ];
 
@@ -54,7 +54,7 @@ export function QueryComposer({
         </label>
         <input
           aria-label="Ask a question"
-          placeholder="Ask your RAG knowledge base..."
+          placeholder="Your Query - Your Project Description - We provide your solution!"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           disabled={disabled || isSending}

@@ -92,14 +92,14 @@ class ApiServerTests(unittest.TestCase):
             "/api/rag/query",
             json={
                 "question": "Classify this content",
-                "chat_model": "qwen3:latest",
+                "chat_model": "qwen3.5:9b",
             },
         )
         self.assertEqual(response.status_code, 200)
         payload = response.json()
-        self.assertEqual(payload["meta"]["chat_model"], "qwen3:latest")
+        self.assertEqual(payload["meta"]["chat_model"], "qwen3.5:9b")
         _, kwargs = mock_answer_question_structured.call_args
-        self.assertEqual(kwargs["chat_model"], "qwen3:latest")
+        self.assertEqual(kwargs["chat_model"], "qwen3.5:9b")
 
     def test_query_validation(self) -> None:
         response = self.client.post("/api/rag/query", json={"question": "   "})

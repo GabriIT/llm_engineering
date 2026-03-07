@@ -33,7 +33,7 @@ cd /home/ubuntu/myrag-deploy/myRAG_app/deploy
 test -f .env.vps || cp .env.example .env.vps
 ```
 
-For Ollama-backed chat model options (`qwen3:latest`, `llama3.2:latest`), set:
+For Ollama-backed chat model options (`qwen3.5:9b`, `llama3.2:latest`), set:
 ```bash
 echo "OLLAMA_URL=http://172.17.0.1:11434" >> .env.vps
 ```
@@ -52,15 +52,19 @@ curl -i http://154.12.245.254/RAG-mat/api/health
 curl -I http://154.12.245.254/RAG-mat/
 ```
 
-5. Rebuild vector DB only if knowledge corpus changed:
+5. Rebuild and rotate vector DB with backup (only if knowledge corpus changed):
 ```bash
 cd /home/ubuntu/myrag-deploy
-bash myRAG_app/deploy/scripts/build_vector_db_vps.sh \
+.venv/bin/python -m myRAG_app.vector.upgrade_cli \
   --knowledge-root /home/ubuntu/myrag-deploy/myRAG_knowledge \
-  --db-path /home/ubuntu/myrag-deploy/vector_db \
+  --active-db-path /home/ubuntu/myrag-deploy/vector_db \
   --collection myrag_docs \
-  --python-bin .venv/bin/python
+  --strict-parse \
+  --quiet-parser-warnings ; echo "exit=$?"
 ```
+
+This keeps the previous vectorstore in:
+`/home/ubuntu/myrag-deploy/vector_db_backups/`
 
 ## 1. Deployment Strategy
 
@@ -86,6 +90,7 @@ bash myRAG_app/deploy/scripts/build_vector_db_vps.sh \
 10. `myRAG_app/deploy/scripts/build_vector_db_vps.sh`
 11. `myRAG_app/deploy/scripts/copy_vector_db_from_local.sh`
 12. `myRAG_app/deploy/scripts/deploy_compose.sh`
+13. `myRAG_app/deploy/scripts/rollback_vector_db.sh`
 
 ## 3. Precheck Matrix and Decision Gate
 
@@ -172,22 +177,26 @@ Run on VPS from repo root:
 
 ```bash
 cd /home/ubuntu/myrag-deploy
-bash myRAG_app/deploy/scripts/build_vector_db_vps.sh \
+.venv/bin/python -m myRAG_app.vector.upgrade_cli \
   --knowledge-root /home/ubuntu/myrag-deploy/myRAG_knowledge \
-  --db-path /home/ubuntu/myrag-deploy/vector_db \
+  --active-db-path /home/ubuntu/myrag-deploy/vector_db \
   --collection myrag_docs \
-  --python-bin .venv/bin/python
+  --strict-parse \
+  --quiet-parser-warnings ; echo "exit=$?"
 ```
 
-This wrapper performs:
-1. strict parser audit
-2. strict ingestion (`--reset --strict-parse`)
-3. inspect validation with vector count > 0
+This performs:
+1. candidate build in a second DB folder
+2. strict parse gate
+3. vector count validation
+4. backup of current active DB
+5. promotion of candidate DB as active
 
 Expected artifacts:
-1. parser report in `/tmp/myrag_deploy_reports`
-2. ingestion log
-3. inspect log
+1. active DB:
+`/home/ubuntu/myrag-deploy/vector_db`
+2. previous backup(s):
+`/home/ubuntu/myrag-deploy/vector_db_backups/`
 
 ## 7. Fallback Path: Copy Local vector_db
 
@@ -289,7 +298,50 @@ Non-regression validation:
 
 1. Remove or comment `/RAG-mat` proxy routes.
 2. Reload proxy.
-3. Stop only myRAG compose stack:
+3. Stop only myRAG API container:
+
+```bash
+cd /home/ubuntu/myrag-deploy
+docker compose --env-file myRAG_app/deploy/.env.vps \
+  -f myRAG_app/deploy/docker-compose.yml stop myrag-api
+```
+
+4. Roll back vector DB to latest backup:
+
+```bash
+cd /home/ubuntu/myrag-deploy
+bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
+  --active-db-path /home/ubuntu/myrag-deploy/vector_db \
+  --backup-root /home/ubuntu/myrag-deploy/vector_db_backups
+```
+
+To restore a specific backup:
+
+```bash
+cd /home/ubuntu/myrag-deploy
+bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
+  --active-db-path /home/ubuntu/myrag-deploy/vector_db \
+  --backup-root /home/ubuntu/myrag-deploy/vector_db_backups \
+  --backup-name vector_db_backup_YYYYMMDD_HHMMSS
+```
+
+5. Start myRAG API container:
+
+```bash
+cd /home/ubuntu/myrag-deploy
+docker compose --env-file myRAG_app/deploy/.env.vps \
+  -f myRAG_app/deploy/docker-compose.yml start myrag-api
+```
+
+6. Validate:
+
+```bash
+cd /home/ubuntu/myrag-deploy
+curl -i http://127.0.0.1:18000/api/health
+curl -i http://154.12.245.254/RAG-mat/api/health
+```
+
+7. If full app rollback is needed, stop only myRAG compose stack:
 
 ```bash
 cd /home/ubuntu/myrag-deploy
@@ -297,7 +349,7 @@ docker compose --env-file myRAG_app/deploy/.env.vps \
   -f myRAG_app/deploy/docker-compose.yml down
 ```
 
-4. Keep previous apps untouched.
+8. Keep previous apps untouched.
 
 ## 12. Troubleshooting
 

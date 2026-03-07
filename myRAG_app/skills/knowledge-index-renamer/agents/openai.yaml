@@ -1,0 +1,4 @@
+interface:
+  display_name: "Knowledge Index Renamer"
+  short_description: "Rename knowledge files by folder index/date"
+  default_prompt: "Use $knowledge-index-renamer to build myRAG_knowledge_index by copying files with names in the format <subfolder>_<index>_<YYYYMMDD>.<ext>."

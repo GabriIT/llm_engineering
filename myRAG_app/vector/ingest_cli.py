@@ -55,6 +55,11 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Return exit code 1 if parser reported any failed files.",
     )
+    parser.add_argument(
+        "--quiet-parser-warnings",
+        action="store_true",
+        help="Suppress noisy parser stderr warnings from PDF backends.",
+    )
     return parser
 
 
@@ -70,6 +75,7 @@ def main(argv: list[str] | None = None) -> int:
         chunk_size=args.chunk_size,
         chunk_overlap=args.chunk_overlap,
         reset=args.reset,
+        quiet_parser_warnings=args.quiet_parser_warnings,
     )
 
     print("=== Vector Ingestion Summary ===")
@@ -97,4 +103,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

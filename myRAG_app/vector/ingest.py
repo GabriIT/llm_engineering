@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import contextlib
+import os
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -52,11 +54,18 @@ def build_vectorstore(
     chunk_size: int = DEFAULT_CHUNK_SIZE,
     chunk_overlap: int = DEFAULT_CHUNK_OVERLAP,
     reset: bool = False,
+    quiet_parser_warnings: bool = False,
 ) -> tuple[IngestSummary, list[FileParseResult]]:
     load_dotenv(override=True)
 
     parse_config = ParseConfig(knowledge_root=knowledge_root)
-    parsed_documents, parse_results = parse_knowledge_base(parse_config)
+    if quiet_parser_warnings:
+        with open(os.devnull, "w", encoding="utf-8") as devnull, contextlib.redirect_stderr(
+            devnull
+        ):
+            parsed_documents, parse_results = parse_knowledge_base(parse_config)
+    else:
+        parsed_documents, parse_results = parse_knowledge_base(parse_config)
     status_counts = Counter(result.status for result in parse_results)
 
     splitter = RecursiveCharacterTextSplitter(
@@ -106,4 +115,3 @@ def build_vectorstore(
         embedding_model=embedding_model,
     )
     return summary, parse_results
-

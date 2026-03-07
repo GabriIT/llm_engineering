@@ -10,7 +10,7 @@ DEFAULT_COLLECTION_NAME = "myrag_docs"
 DEFAULT_EMBEDDING_MODEL = "text-embedding-3-large"
 DEFAULT_CHAT_MODEL = "gpt-4.1-nano"
 OLLAMA_CHAT_MODELS = (
-    "qwen3:latest",
+    "qwen3.5:9b",
     "llama3.2:latest",
 )
 SUPPORTED_CHAT_MODELS = (DEFAULT_CHAT_MODEL, *OLLAMA_CHAT_MODELS)

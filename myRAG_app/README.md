@@ -130,6 +130,60 @@ python3 /home/gabri/.codex/skills/.system/skill-creator/scripts/quick_validate.p
   --show-context
 ```
 
+### 14. Upgrade vectorstore with backup (recommended for new knowledge files)
+Stop backend/API first, then run:
+```bash
+.venv/bin/python -m myRAG_app.vector.upgrade_cli \
+  --knowledge-root /home/gabri/udemy/llm_engineering/myRAG_knowledge \
+  --active-db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
+  --collection myrag_docs \
+  --strict-parse \
+  --quiet-parser-warnings ; echo "exit=$?"
+```
+
+What it does:
+1. Builds a second candidate vectorstore with new data.
+2. Validates non-zero vectors.
+3. Moves current `vector_db` into backup folder:
+`/home/gabri/udemy/llm_engineering/myRAG_app/vector_db_backups/`
+4. Promotes candidate to active `vector_db`.
+
+Optional:
+```bash
+# Build candidate only (no promotion)
+.venv/bin/python -m myRAG_app.vector.upgrade_cli \
+  --knowledge-root /home/gabri/udemy/llm_engineering/myRAG_knowledge \
+  --active-db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
+  --build-only
+
+# Keep more historical backups
+.venv/bin/python -m myRAG_app.vector.upgrade_cli \
+  --knowledge-root /home/gabri/udemy/llm_engineering/myRAG_knowledge \
+  --active-db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
+  --keep-backups 10
+```
+
+Detailed parsing + upgrade + rollback runbook:
+`myRAG_app/README_parsing_instruction.md`
+
+### 15. Roll back to previous vectorstore backup
+If a new upgrade is not satisfactory, restore a backup:
+```bash
+cd /home/gabri/udemy/llm_engineering
+bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
+  --active-db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
+  --backup-root /home/gabri/udemy/llm_engineering/myRAG_app/vector_db_backups
+```
+
+To restore a specific backup folder:
+```bash
+cd /home/gabri/udemy/llm_engineering
+bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
+  --active-db-path /home/gabri/udemy/llm_engineering/myRAG_app/vector_db \
+  --backup-root /home/gabri/udemy/llm_engineering/myRAG_app/vector_db_backups \
+  --backup-name vector_db_backup_YYYYMMDD_HHMMSS
+```
+
 ## New Parsing Agent Skill
 Skill location:
 `myRAG_app/skills/parsing-output-guardian`
@@ -301,7 +355,7 @@ This app now includes:
 3. Local pseudo-auth + per-user local thread persistence.
 4. UI chat-model selector with options:
 - `gpt-4.1-nano` (default)
-- `qwen3:latest` (Ollama)
+- `qwen3.5:9b` (Ollama)
 - `llama3.2:latest` (Ollama)
 
 ### API Endpoints
@@ -315,7 +369,7 @@ Body:
 - `question`
 - `history` (optional)
 - `retrieval` (optional: `k`, `search_type`, `fetch_k`, `lambda_mult`, `doc_type`, `source_contains`)
-- `chat_model` (optional: `gpt-4.1-nano`, `qwen3:latest`, `llama3.2:latest`)
+- `chat_model` (optional: `gpt-4.1-nano`, `qwen3.5:9b`, `llama3.2:latest`)
 Returns:
 - `answer` (legacy plain text compatibility)
 - `structured`:
@@ -349,7 +403,7 @@ ollama serve
 
 Pull local models:
 ```bash
-ollama pull qwen3:latest
+ollama pull qwen3.5:9b
 ollama pull llama3.2:latest
 ```
 
@@ -377,7 +431,7 @@ npm run dev
 3. Send the query.
 4. The selected model is sent per request to the backend:
 - `gpt-4.1-nano` uses OpenAI chat.
-- `qwen3:latest` and `llama3.2:latest` use Ollama chat at `OLLAMA_URL`.
+- `qwen3.5:9b` and `llama3.2:latest` use Ollama chat at `OLLAMA_URL`.
 
 Notes:
 1. Retrieval embeddings still use OpenAI (`text-embedding-3-large`) for this vector DB.

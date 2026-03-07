@@ -58,7 +58,7 @@ export default function App() {
           </button>
           <div>
             <h1>{activeThread?.title ?? "myRAG Chat"}</h1>
-            <p>Multi-turn RAG assistant with local pseudo-auth and thread history.</p>
+            <p>Material Assistant -  Material Properties, Selection and Classification</p>
           </div>
           <div className="view-toggle" role="group" aria-label="Answer view mode">
             <button

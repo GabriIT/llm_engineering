@@ -219,3 +219,9 @@ node_modules/
 myRAG_app/ui/dist/
 myRAG_app/ui/coverage/
 *.tsbuildinfo
+
+
+myRAG_app/vector_db_backups/
+myRAG_app/vector_db_candidate_*/
+myRAG_knowledge_index/
+samples-6-mar/
