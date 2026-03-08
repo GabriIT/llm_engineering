@@ -19,6 +19,8 @@ interface QueryRequest {
   history?: HistoryMessage[];
   retrieval?: RetrievalOptions;
   chat_model?: ChatModelOption;
+  username?: string;
+  thread_id?: string;
 }
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");

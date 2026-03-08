@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
@@ -22,6 +23,8 @@ class ApiServerTests(unittest.TestCase):
         self.assertEqual(payload["status"], "ok")
         self.assertIn("collection", payload)
         self.assertIn("db_path", payload)
+        self.assertIn("thread_memory_enabled", payload)
+        self.assertIn("thread_memory_ready", payload)
 
     @patch.dict("os.environ", {"MYRAG_ALLOWED_ORIGINS": "http://154.12.245.254,http://example.com"})
     def test_allowed_origins_from_env(self) -> None:
@@ -123,6 +126,51 @@ class ApiServerTests(unittest.TestCase):
         payload = response.json()
         self.assertEqual(payload["detail"]["error"], "backend_error")
         self.assertIn("backend exploded", payload["detail"]["message"])
+
+    def test_query_uses_thread_memory_when_username_and_thread_id_are_provided(self) -> None:
+        fake_store = SimpleNamespace(
+            enabled=True,
+            health=lambda: {
+                "enabled": True,
+                "ready": True,
+                "db_name": "myRAG_threads",
+                "last_error": None,
+            },
+            build_history=lambda **_: [{"role": "assistant", "content": "Previous response"}],
+            persist_turn=lambda **_: True,
+        )
+        with patch("myRAG_app.api.server.create_thread_memory_store_from_env", return_value=fake_store):
+            app = create_app()
+            client = TestClient(app)
+            with patch("myRAG_app.api.server.answer_question_structured") as mock_answer:
+                mock_answer.return_value = (
+                    StructuredRagAnswer(
+                        prompt="Follow-up?",
+                        bullets=["Uses memory."],
+                        answer_text="Uses previous response context.",
+                    ),
+                    "- Uses memory.\n\nUses previous response context.",
+                    [],
+                )
+                response = client.post(
+                    "/api/rag/query",
+                    json={
+                        "question": "Follow-up?",
+                        "username": "alice",
+                        "thread_id": "thread-1",
+                    },
+                )
+
+                self.assertEqual(response.status_code, 200)
+                payload = response.json()
+                self.assertTrue(payload["meta"]["thread_memory_used"])
+                self.assertTrue(payload["meta"]["thread_memory_ready"])
+                self.assertEqual(payload["meta"]["thread_id"], "thread-1")
+                _, kwargs = mock_answer.call_args
+                self.assertEqual(
+                    kwargs["history"],
+                    [{"role": "assistant", "content": "Previous response"}],
+                )
 
 
 if __name__ == "__main__":

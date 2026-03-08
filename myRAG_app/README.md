@@ -601,3 +601,6 @@ Straight ingest CLI guide (all modes/options):
 
 New-files workflow guide (source -> vectorstore with alternatives, incl. PPTX):
 `myRAG_app/README_Source_to_VectorStore.md`
+
+PostgreSQL/pgvector thread memory setup (local + VPS):
+`myRAG_app/README_thread_memory_postgres.md`

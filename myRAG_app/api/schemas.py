@@ -45,6 +45,8 @@ class QueryRequest(BaseModel):
     history: list[HistoryMessage] = Field(default_factory=list)
     retrieval: RetrievalOptions | None = None
     chat_model: str | None = None
+    username: str | None = None
+    thread_id: str | None = None
 
     @field_validator("question")
     @classmethod
@@ -68,6 +70,14 @@ class QueryRequest(BaseModel):
             )
         return model
 
+    @field_validator("username", "thread_id")
+    @classmethod
+    def validate_identifier(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        identifier = value.strip()
+        return identifier or None
+
 
 class SourceRef(BaseModel):
     source: str
@@ -83,6 +93,9 @@ class QueryMeta(BaseModel):
     k: int
     search_type: SearchType
     elapsed_ms: int
+    thread_memory_used: bool = False
+    thread_memory_ready: bool | None = None
+    thread_id: str | None = None
 
 
 class StructuredAnswer(BaseModel):
@@ -102,3 +115,7 @@ class HealthResponse(BaseModel):
     status: Literal["ok"] = "ok"
     collection: str
     db_path: str
+    thread_memory_enabled: bool = False
+    thread_memory_ready: bool = False
+    threads_db: str | None = None
+    thread_memory_error: str | None = None

@@ -1,16 +1,16 @@
 # Development
 
-- generated_at: 2026-03-07T06:54:45.762885+00:00
-- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge
+- generated_at: 2026-03-08T00:51:09.747348+00:00
+- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index
 
 ## Summary
-- sources: 2
-- segments: 70
-- characters: 33727
+- sources: 3
+- segments: 104
+- characters: 50535
 - failed_files: 0
 
-## Source: AD-TCS_Key Projects overview_2026-01.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Development/AD-TCS_Key Projects overview_2026-01.pdf
+## Source: Development_1_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Development/Development_1_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -863,8 +863,841 @@ LIDI
 AD-TCS Key Project
 TV Stand / Haier
 
-## Source: AD-TCS_Key Projects overview_2026-02.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Development/AD-TCS_Key Projects overview_2026-02.pdf
+## Source: Development_2_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Development/Development_2_20260308.pdf
+- source_ext: .pdf
+- parser_used: PyPDFLoader
+- fallback_used: False
+- parse_status: success
+- extracted_chars: 16808
+
+### Segment 1 (page 1)
+
+Key Projects Overview_Feb. 2026 1
+Key Projects Overview
+Feb. 2026
+
+### Segment 2 (page 2)
+
+Key Projects Overview_Feb. 2026 2
+Overview List AUTO
+Application Product Customer
+(OEM / End-user) Seg. Pot.
+[t/a] SOP Resp.
+(Sales/AD)
+AAF (Active Air
+Flap) Drive Shaft
+Grinova T XE
+11603 (GF50)
+Black 9915
+Kyungchang Industry
+(HKMC) 222 166 Q3 2027 PAIS / SEOJ
+eWGA Gear Grivory HTV-5H1
+& HT2V-3H LF
+UAES
+(BYD&GWM) 270 96 Q8.2027 WAHU / HEBA
+Roof Rack Base
+Grivory GV XE
+16101 Black 9839
+(GVL-5H HP)
+Kemflo
+(RIVIAN) 230 21 Q2 2026 ZHER / FUVI
+Vane Seal
+Grinova H XE
+11629 Black 9205
+(H-GF30H NZ)
+BorgWarner
+(VW/Hyundai) 270 50 05.2026 GUOH / XUJR
+2K Cooling
+Coupler
+Grilamid L 25A H
+X Black 9992
+Blove Light
+(Li Auto) 222 65 08.2026 LTIN / HUAB
+
+### Segment 3 (page 3)
+
+Key Projects Overview_Feb. 2026 3
+Material:
+Grinova T XE 11603 (GF50) Black 9915
+Requirements
+ High stiffness at High temp.
+(140℃ x 1,000 hrs)
+ High creep resistance
+ High toughness
+Customer: Kyungchang Industry
+OEM/ End User: HKMC
+AD-TCS Key Project
+AAF (Active Air Flap) Drive Shaft / SEOJ
+Model: KA5
+(Carnival 5th Generation)
+
+### Segment 4 (page 4)
+
+Key Projects Overview_Feb. 2026 4
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp. [Sales/AD]
+AAF (Active Air
+Flap) Drive
+Shaft
+Grinova T XE
+11603 (GF50)
+Black 9915
+Kyungchang
+Industry
+(HKMC)
+222-260205-1 166 Q3 2027 PAIS / SEOJ
+Advantages (Technical Competition) Risks / Competitor Grade
++ High stiffness at High temp. (140℃ x 1,000 hrs)
++ High creep resistance
++ High toughness
+- Warpage phenomenon
+Plan to try for optimization through deviation of tool temp. upper &
+lower side
+Actual Situation Next Steps (by When) Resp.
+ Proposed Grinova T products with
+consideration of requirements of application
+ Customer will check mechanical properties on
+application after molding trial.
+ Trial support (~30.06.26') SEOJ
+AD-TCS Key Project
+AAF (Active Air Flap) Drive Shaft / SEOJ
+
+### Segment 5 (page 5)
+
+Key Projects Overview_Feb. 2026 5
+Material:
+Grivory HTV-5H1 Black 9205
+Grivory HT2V-3H LF Black 9205
+Requirements
+ Heat aging resistance at 160 ℃
+ Gear strength min. 650N
+ Thermal shock @ -40°C ~ 160°C
+Customer: UAES
+OEM/ End User: BYD & GWM
+AD-TCS Key Project
+eWGA Gear / HEBA
+
+### Segment 6 (page 6)
+
+Key Projects Overview_Feb. 2026 6
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+eWGA Gear
+Grivory HTV-
+5H1 & HT2V-
+3H LF
+UAES
+(BYD&GWM) 270-251014-1 96 08.2027 WAHU / HEBA
+Advantages (Technical Competition) Risks / Competitor Grade
++ Lower water absorption and density, compared
+with PA46
+- Stanyl TW271F6 (PA46+PTFE+GF30)
+- Stanyl TW278F10 (PA46+PTFE+GF50)
+- Stanyl TW241F12 (PA46+GF60)
+Actual Situation Next Steps (by When) Resp.
+ HT2V-3H LF was molded in the tooling of
+TW278F10 at molder. Dimension is over limit
+due to different GF content, but gear strength
+is better than PA46. (07.2025)
+ Add Grivory FE 10541 (HT1VS-5H PTFE)
+as alternative in PA46 replacement
+solution. (03.2026)
+HEBA
+AD-TCS Key Project
+eWGA Gear / HEBA
+
+### Segment 7 (page 7)
+
+Key Projects Overview_Feb. 2026 7
+Material:
+Grivory GV XE 16101 Black 9839
+(GVL-5H HP)
+Requirements
+ High stiffness and strength at
+elevated temperature
+ 500 hrs weathering resistance
+ Outstanding creep resistance
+Customer: Kemflo
+OEM/ End User: RIVIAN
+AD-TCS Key Project
+Roof Rack Base / ZHER
+
+### Segment 8 (page 8)
+
+Key Projects Overview_Feb. 2026 8
+Application Material
+Customer
+(OEM, End-
+user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp. [Sales/AD]
+Roof Rack Base
+Grivory GV XE
+16101 Black 9839
+(GVL-5H HP)
+Kemflo
+(RIVIAN) 230-250812-2 21 Q2 2026 ZHER / FUVI
+Advantages (Technical Competition) Risks / Competitor Grade
++ High stiffness at elevated temperature
++ Outstanding creep resistance
++ Superior energy absorption
+- No
+Actual Situation Next Steps (by When) Resp.
+ FEA done, GVL-5H passed with a factor of
+safety and the color was approved.
+ Mold trial done, functional test of these parts is
+on-going, the test result will be finished by 28th
+Feb. 2026.
+ Follow up the test result and Trial
+support (28th.02.2026)
+ZHER
+AD-TCS Key Project
+Roof Rack Base / ZHER
+
+### Segment 9 (page 9)
+
+Key Projects Overview_Feb. 2026 9
+Material:
+Grinova H XE 11629 Black 9205
+(H-GF30H NZ)
+Requirements
+ Engine Oil resistance at 120°C
+ Ultrasonic welding
+ Excellent wear resistance
+Customer: BorgWarner
+OEM/ End User: VW & Hyundai
+AD-TCS Key Project
+Vane Seal / XUJR
+
+### Segment 10 (page 10)
+
+Key Projects Overview_Feb. 2026 10
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+Vane Seal
+H XE 11629
+Black 9205
+(H-GF30H NZ)
+BorgWarner
+(VW & Hyundai) 270-250710-2 50 05.2026 GUOH / XUJR
+Advantages (Technical Competition) Risks / Competitor Grade
++ Success stories about PEEK replacement
++ Good ultrasonic welding property
++ Excellent oil and wear resistance
+- PEEK-CF15 PTFE modified
+Actual Situation Next Steps (by When) Resp.
+ Ultrasonic welding validation done
+ PV test and abrasion test of parts length 20
+mm pass
+ New mold kick off
+ Support mold design for mass
+production and OTS parts delivery.
+(03.2026)
+XUJR
+AD-TCS Key Project
+Vane Seal / XUJR
+
+### Segment 11 (page 11)
+
+Key Projects Overview_Feb. 2026 11
+Material:
+Grilamid L 25A H X Black 9992
+Requirements
+ Balanced strength and toughness
+ Coolant aging at 90°C for 600h
+ Damp heat aging at 70°C/85% r.h.,
+85°C/85% r.h., 95°C/85%r.h. for 1,000h
+Customer: Blove Light
+OEM/ End User: Li Auto
+AD-TCS Key Project
+2K Cooling Coupler / HUAB
+
+### Segment 12 (page 12)
+
+Key Projects Overview_Feb. 2026 12
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+2K Cooling
+Coupler
+Grilamid L
+25A H X
+Black 9992
+Blove Light
+(Li Auto) 222-260119-1 65 08.2026 LTIN / HUAB
+Advantages (Technical Competition) Risks / Competitor Grade
++ Success stories
++ Good hydrolysis resistance
++ Good toughness and strength
+- No
+Actual Situation Next Steps (by When) Resp.
+ Material defined
+ Material test report submitted
+ Mold built
+ Material approval on going
+ Support mold trial on site. (03.2026) HUAB
+AD-TCS Key Project
+2K Cooling Coupler / HUAB
+
+### Segment 13 (page 13)
+
+Key Projects Overview_Feb. 2026 13
+Overview List I&C
+Application Product Customer
+(OEM / End-user) Seg. Pot.
+[t/a] SOP Resp.
+(Sales/AD)
+E-scooter Display
+Housing
+Grivory GV XE 11119
+(GV-GFX50 V0)
+Hualong
+(YADEA) 740 100 06.2026 MOSK
+ZHVI
+Safety Valve of
+Electric Water
+Heater
+Grivory GV-6H Vanward
+(Haier) 410 75 05.2026 ZHLE
+LINR
+HVAC Ball Valve Grivory HT1V-5 FWA JLT/Chuandibai
+(Grandsire) 410 50 02.2026 WEIC
+JIAJ
+AGV Chassis Grivory GV XE 16141
+(GVCL-4H V0)
+Chen'nuo
+(Geek+) 450 44 06.2026 GEJA
+ZHUP
+Inner Bracket Grilamid 2S XE 12211
+(PA610-GF50)
+Gengde
+(HUAWEI) 850 100 07.2026 JINE
+PEPE
+
+### Segment 14 (page 14)
+
+Key Projects Overview_Feb. 2026 14
+Material:
+Grivory GV XE 11119 (GV-GFX50 V0)
+Requirements
+ Low warpage than PC-GF, <0.5mm
+ Thermal shock, -40 to 85°C, 75mins,
+300cycles
+Molder: Hualong
+Tier: AISPEECH
+OEM / End User: YADEA
+AD-TCS Key Project
+E-scooter Display Housing / Hualong
+
+### Segment 15 (page 15)
+
+Key Projects Overview_Feb. 2026 15
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+E-scooter
+Display
+Housing
+XE 11119
+(GV-GFX50 V0)
+Hualong
+(YADEA) 740-251212-1 100 06.2026 MOSK / ZHVI
+Advantages (Technical Competition) Risks / Competitor Grade
++Low warpage
++Good mechanical strength
+- Possible local competitors involved after
+production
+Actual Situation Next Steps (by When) Resp.
+ Al replacement and problem-solving of
+PC/ABS due to waterproof failure and low
+heat resistance, 11.2025
+ 2t pilot run without problem, painting
+process optimization is ongoing to
+improve adhesion, 02.2026
+ Support to resolve painting issue,
+04.2026
+ZHVI
+AD-TCS Key Project
+E-scooter Display Housing / Hualong
+
+### Segment 16 (page 16)
+
+Key Projects Overview_Feb. 2026 16
+Material:
+Grivory GV-6H BK
+Requirements
+ Brass replacement for >30% cost saving
+ Reliable mechanical properties to
+withstand >60Nm torque force of G1/2'
+thread
+ Static pressure 5.0 MPa, 1 min.
+Customer: Vanward
+OEM/ End User: Haier
+AD-TCS Key Project
+Safety Valve of Electric Water Heater / Vanward
+Reference picture
+
+### Segment 17 (page 17)
+
+Key Projects Overview_Feb. 2026 17
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+Safety Valve GV-6H Vanward
+(Haier) 411-231107-1 75 05.2026 ZHLE
+LINR
+Advantages (Technical Competition) Risks / Competitor Grade
++Reliable mechanical properties
++CATS & AD convince development
+- Downgrade to PA66-GF50 with metal thread
+inserts
+Actual Situation Next Steps (by When) Resp.
+ Reliable test of 3rd trial samples is still
+ongoing at Haier, 500kg was ordered to
+produce for oversea customer, 12.2025
+ Finished all internal tests and ready to sell
+to the market (other OEMs), 02.2026
+ Obtain Haier test result, 30th Mar. R. Lin
+AD-TCS Key Project
+Safety Valve of Electric Water Heater / Vanward
+
+### Segment 18 (page 18)
+
+Key Projects Overview_Feb. 2026 18
+Material:
+Grivory HT1V-5 FWA
+Requirements
+ High stiffness & strength
+(burst pressure > 60bar @23ºC)
+ Food & water contact approved
+Customer: JLT/ Chuandibai
+Tier: Sansheng
+End User: Grandsire
+AD-TCS Key Project
+Ball Valve / Grandsire
+
+### Segment 19 (page 19)
+
+Key Projects Overview_Feb. 2026 19
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp. [Sales/AD]
+Ball valve Grivory HT1V-5
+FWA
+JLT/Chuandibai
+(Grandsire) 410-241011-1 50 02.2026 WEIC
+JIAJ, XUER
+Advantages (Technical Competition) Risks / Competitor Grade
++ Technical support
++ High strength & stiffness
+- No
+Actual Situation Next Steps (by When) Resp.
+ Chuandibai (1st molder) part passed test and
+mass production started (9t material delivered),
+11.2025
+ Both JLT & Chuandibai in pilot production,
+around 20 ton material delivered, 02.2026
+ Track mass production status,
+03.2026
+JIAJ
+AD-TCS Key Project
+Ball Valve / Grandsire
+
+### Segment 20 (page 20)
+
+Key Projects Overview_Feb. 2026 20
+Material:
+Grivory GV XE 16141 (GVCL-4H V0)
+Requirements
+600,000 cycles lifting
+test @ 40kg
+150,000
+times 50mm height obstacle tests
+100 times
+collisions @ 4m/s
+Chassis deflection< 3mm @ 40kg
+Customer: Chennuo
+End User: Geek+
+AD-TCS Key Project
+AGV Chassis / Geek+
+
+### Segment 21 (page 21)
+
+Key Projects Overview_Feb. 2026 21
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+AGV Chassis XE 16141 (GVCL-4H
+V0)
+Chennuo
+(Geek+) 450-250925-1 45 06.2026 GEJA
+ZHUP
+Advantages (Technical Competition) Risks / Competitor Grade
++ Material performance (UL V0 & ESD)
++ Technical support (FEA, MFA, on-site trial)
+- Insufficient cost saving
+Actual Situation Next Steps (by When) Resp.
+ New design AGV chassis, plastic solution has
+~15% cost saving vs metal die-casting, 10.2025
+ FEA result showed acceptable deformation (1.5 vs.
+spec 2.0mm) & stress level (Max. 59 MPa), 10.2025
+ Tooling were ready and 8 pcs samples collected
+for function test, 02.2026
+ On-site check test status,
+03.2026
+ZHUP
+AD-TCS Key Project
+AGV Chassis / Geek+
+
+### Segment 22 (page 22)
+
+Key Projects Overview_Feb. 2026 22
+Material:
+Grilamid 2S XE 12211 (PA610-GF50)
+Requirements
+ Good stiffness
+ Lower warpage & dimensional stability
+ Low Permittivity Dk
+Customer: Gengde
+OEM/ End User: HUAWEI
+AD-TCS Key Project
+Smart Phone Inner Bracket / Gengde
+
+### Segment 23 (page 23)
+
+Key Projects Overview_Feb. 2026 23
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+Inner Bracket
+Grilamid 2S XE
+12211 (PA610-
+GF50)
+Gengde
+(HUAWEI) 850-260203-1 100 07.2026 JINE
+PEPE
+Advantages (Technical Competition) Risks / Competitor Grade
++Low Permittivity Dk
++Good stiffness & dimensional stability
+- Syensqo Kalix 2545
+- Commercial compete with Syensqo Kalix 2545
+Actual Situation Next Steps (by When) Resp.
+ Project initiated for the new generation of
+smart phone - Pura 90. Sample done by
+customer, test is ongoing, 02. 2026
+ Obtain test results, 04. 2026 PEPE
+AD-TCS Key Project
+Smart Phone Inner Bracket / Gengde
+
+### Segment 24 (page 24)
+
+Key Projects Overview_Feb. 2026 24
+Overview List CATS
+Application Product Customer
+(OEM / End-user) Seg. Pot.
+[t/a] SOP Resp.
+(Sales/AD)
+Actuator Gear
+Grivory HT2VZ-
+33H/HT2V-3H LF/
+HT1VS-5H1/HTV-
+4H1
+Temb
+(Chery&Geely) 222 50 Dec. 2026 WANH/HULO,
+LIDI
+Dyer Housing Grivory HTV-5H1 Anzhi
+(Geely) 270 30 Jun. 2026 XUEV/LIPE,
+XUER
+Oil Jet Pipe Grivory HTV-4H1 Hongqi
+(Hongqi) 242 24 Jan. 2027 SONG/ZHZA,
+WABR
+Coffee Machine
+BU Shell Grivory GVX-5H Providence
+(LAVAZZA) 480 85 Dec. 2026 YAOE/HELU,
+YANC
+Front Cover Grilamid LV-30H
+V0
+Zhengda
+(Stryker) 710 30 May 2025 CHNC/LICR,
+JIJO
+
+### Segment 25 (page 25)
+
+Key Projects Overview_Feb. 2026 25
+Material:
+Grivory HT2VZ-33H / Grivory HT2V-3H LF
+Grivory HT1VS-5H1 / Grivory HTV-4H1
+Customer: Temb
+OEM/ End User: Chery & Geely
+AD-TCS Key Project
+Actuator Gears / Temb
+Requirements
+ High strength and fatigue performance
+under various temperatures (test loads of
+2Nm@-40°C, 1.5Nm@23°C, 1Nm@120°C)
+ High temperature resistance
+
+### Segment 26 (page 26)
+
+Key Projects Overview_Feb. 2026 26
+Application Material
+Customer
+(OEM, End-
+user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+Actuator
+Gear
+Grivory HT2VZ-33H
+Grivory HT2V-3H LF
+Grivory HT1VS-5H1
+Grivory HTV-4H1
+Temb
+(Chery&Geel
+y)
+222-260114-1 50 Dec. 2026 WANH/HULO,
+LIDI
+Advantages (Technical Competition) Risks / Competitor Grade
++High strength at high temperature
++Cost saving compared to PA46
++FEA support
+- Envalior Stanyl TW241F10 (PA46 GF50)
+Actual Situation Next Steps (by When) Resp.
+ FEA of 5x gears done.
+ Report with design suggestions provided
+to customer.
+ Follow up the customer's decision by
+Mar. 2026
+LIDI
+AD-TCS Key Project
+Actuator Gears / Temb
+
+### Segment 27 (page 27)
+
+Key Projects Overview_Feb. 2026 27
+Material:
+Grivory HTV-5H1
+Requirements
+ High strength & stiffness at high
+temperature (burst pressure of
+36bar@23°C and 20bar@150°C)
+ High temperature resistance
+Customer: Anzhi
+OEM/ End User: Geely
+AD-TCS Key Project
+Dryer Housing / Anzhi
+
+### Segment 28 (page 28)
+
+Key Projects Overview_Feb. 2026 28
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+Dryer Housing Grivory
+HTV-5H1
+Anzhi
+(Geely) 270-251204-1 30 Jun. 2026 XUEV/LIPE,
+XUER
+Advantages (Technical Competition) Risks / Competitor Grade
++High strength & stiffness at high
+temperature
++FEA support
+- Insufficient weld line strength
+Actual Situation Next Steps (by When) Resp.
+ FEA performed to find high stress areas.
+ Weld lines distribution investigated with
+MFA.
+ CAE report with design suggestions
+provided.
+ Follow up tooling by Apr. 2026 XUER
+AD-TCS Key Project
+Dryer Housing / Anzhi
+
+### Segment 29 (page 29)
+
+Key Projects Overview_Feb. 2026 29
+Material:
+Grivory HTV-4H1
+Requirements
+ High strength & stiffness at High
+temperature (burst pressure >4bar
+@120°C)
+ High temperature resistance
+(oil aging at 150°C, 1'008 hours)
+Customer: Hongqi
+OEM/ End User: Hongqi
+AD-TCS Key Project
+Oil Jet Pipe / Hongqi
+
+### Segment 30 (page 30)
+
+Key Projects Overview_Feb. 2026 30
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+Oil Jet Pipe Grivory
+HTV-4H1
+Hongqi
+(Hongqi) 242-260123-1 24 Jan. 2027 SONG/ZHZA,
+WABR
+Advantages (Technical Competition) Risks / Competitor Grade
++Cost and weight saving compared to metal
++Success story with Grivory HT
++FEA support
+- No
+Actual Situation Next Steps (by When) Resp.
+ Feasibility study with FEA, done.
+ FEA report with design suggestions
+provided to customer.
+ Follow up customer's decision and
+support MFA if needed by Mar. 2026
+WABR
+AD-TCS Key Project
+Oil Jet Pipe / Hongqi
+
+### Segment 31 (page 31)
+
+Key Projects Overview_Feb. 2026 31
+Material:
+Grivory GVX-5H
+Requirements
+ High warpage performance
+(out of flatness ≤ 0.2 mm)
+ High strength
+(burst pressure of 35 bar@23°C )
+Customer: Providence
+OEM/ End User: LAVAZZA
+AD-TCS Key Project
+Coffee Machine BU Shell / Providence
+
+### Segment 32 (page 32)
+
+Key Projects Overview_Feb. 2026 32
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+Coffee Machine
+BU Shell
+Grivory
+GVX-5H
+Providence
+(LAVAZZA) 480-260113-2 85 Dec. 2026 YAOE/HELU,
+YANC
+Advantages (Technical Competition) Risks / Competitor Grade
++High strength & stiffness
++Very low warpage
++MFA support
+- PA66 GF30
+Actual Situation Next Steps (by When) Resp.
+ Various gating scenarios investigated with
+MFA to improve warpage.
+ Gating solutions explained to customer.
+ Soft tool is under preparation.
+ Follow up tooling by Apr. 2026 YANC
+AD-TCS Key Project
+Coffee Machine BU Shell / Providence
+
+### Segment 33 (page 33)
+
+Key Projects Overview_Feb. 2026 33
+Material:
+Grilamid LV-30H V0
+Requirements
+ Chemical resistance
+ High flow ability
+ Low warpage
+Customer: Zhengda
+OEM/ End User: Stryker
+AD-TCS Key Project
+Front Cover / Zhengda
+
+### Segment 34 (page 34)
+
+Key Projects Overview_Feb. 2026 34
+Application Material Customer
+(OEM, End-user)
+Project No. or
+Segment
+Pot.
+[t/a] SOP Resp.
+[Sales/AD]
+Front Cover Grilamid
+LV-30H V0
+Zhengda
+(Stryker) 710-240218-1 30 May 2025 CHNC/LICR,
+JIJO
+Advantages (Technical Competition) Risks / Competitor Grade
++High dimensional stability
++Good chemical resistance and UV stability
++Technical support
+- Air trap due to uneven wall-thickness
+Actual Situation Next Steps (by When) Resp.
+ Air trap with surface issue detected at T0.
+ Gating optimized with MFA.
+ MFA report provided.
+ Follow up tool modification by Mar.
+2026
+JIJO
+AD-TCS Key Project
+Front Cover / Zhengda
+
+## Source: Development_3_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Development/Development_3_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False

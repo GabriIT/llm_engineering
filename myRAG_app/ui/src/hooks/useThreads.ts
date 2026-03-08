@@ -157,6 +157,8 @@ export function useThreads(username: string | null) {
         question,
         history: priorHistory,
         chat_model: chatModel,
+        username,
+        thread_id: withUserMessage.id,
       });
       const assistantMessage: ThreadMessage = {
         id: newId(),

@@ -1,16 +1,16 @@
 # Success_Cases
 
-- generated_at: 2026-03-07T06:54:45.764320+00:00
-- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge
+- generated_at: 2026-03-08T00:51:09.749281+00:00
+- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index
 
 ## Summary
-- sources: 3
-- segments: 3
-- characters: 3096
+- sources: 4
+- segments: 4
+- characters: 4129
 - failed_files: 0
 
-## Source: 757_18_Lichtschranke.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Success_Cases/757_18_Lichtschranke.pdf
+## Source: Success_Cases_1_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Success_Cases/Success_Cases_1_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -46,8 +46,8 @@ wurde gewählt, weil er eine hohe Steifigkeit, Festigkeit,
 Dimensionsstabilität, gute Chemikalienbeständigkeit und
 gleichzeitig eine gute Oberflächenqualität bietet.
 
-## Source: 758_18_GPS-Box.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Success_Cases/758_18_GPS-Box.pdf
+## Source: Success_Cases_2_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Success_Cases/Success_Cases_2_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -90,8 +90,50 @@ die besonders geringe Kriechneigung wird die Dichtlippe langfristig
 abgestützt, um die Dichtigkeit auch nach Jahren im Einsatz
 sicherzustellen.
 
-## Source: 762_18_Gleitschiene-STEWI.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Success_Cases/762_18_Gleitschiene-STEWI.pdf
+## Source: Success_Cases_3_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Success_Cases/Success_Cases_3_20260308.pdf
+- source_ext: .pdf
+- parser_used: PyPDFLoader
+- fallback_used: False
+- parse_status: success
+- extracted_chars: 1033
+
+### Segment 1 (page 1)
+
+Success Story
+Salesman/Verkäufer
+Roland Dillitzer
+
+ADC/AWT-Support
+Volker Eichhorn
+
+Nummer: 762
+Jahr: 2018
+Code: 510
+Land: CH
+Dry effortlessly!
+STEWI slide
+Well-known Swiss laundry-rack manufacturer STEWI uses
+Grilon TSGL-30/4 for the slides of its “Lady” product line. The
+slides allow for effortless assembly and dismounting of the
+laundry rack. They are exposed to weather and must resist high
+impact when the rack is being closed. STEWI switched to the
+EMS material because Grilon TSGL-30/4 offers better
+performance and quality than the predecessor material.
+Grilon TSGL-30/4
+Mühelos trocknen!
+Gleitschiene STEWI
+Der bekannte Schweizer Wäscheständer-Hersteller STEWI
+setzt bei den Gleitschienen der Produktelinie "Lady" auf Grilon
+TSGL-30/4. Die Gleitschienen dienen dazu, den
+Wäscheständer mühelos auf- und abzubauen. Sie sind der
+Witterung ausgesetzt und werden beim Schliessen stark auf
+Schlag belastet. Da Grilon TSGL-30/4 bessere Performance
+und Qualität bietet als das Vorgängermaterial, wechselte
+STEWI zum EMS-Werkstoff.
+
+## Source: Success_Cases_4_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Success_Cases/Success_Cases_4_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False

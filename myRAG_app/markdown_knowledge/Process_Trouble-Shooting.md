@@ -1,16 +1,16 @@
 # Process_Trouble-Shooting
 
-- generated_at: 2026-03-07T06:54:45.763354+00:00
-- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge
+- generated_at: 2026-03-08T00:51:09.748016+00:00
+- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index
 
 ## Summary
-- sources: 3
-- segments: 505
-- characters: 862235
+- sources: 4
+- segments: 507
+- characters: 864036
 - failed_files: 0
 
-## Source: eBOOK Kulkarni Robust Process Development and Scientific Molding 2E.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Process_Trouble-Shooting/eBOOK Kulkarni Robust Process Development and Scientific Molding 2E.pdf
+## Source: Process_Trouble-Shooting_1_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Process_Trouble-Shooting/Process_Trouble-Shooting_1_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -16916,8 +16916,8 @@ Booke Bonus
 © 2017 Carl Hanser Verlag. All rights reserved.
 No unauthorized disclosure or reproduction; licensed to purchaser only.
 
-## Source: EMS-GRIVORY Injection Molding Trouble Shooting Guide(English Version, Second Edition, 2022).pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Process_Trouble-Shooting/EMS-GRIVORY Injection Molding Trouble Shooting Guide(English Version, Second Edition, 2022).pdf
+## Source: Process_Trouble-Shooting_2_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Process_Trouble-Shooting/Process_Trouble-Shooting_2_20260308.pdf
 - source_ext: .pdf
 - parser_used: rapidocr_onnxruntime
 - fallback_used: True
@@ -21942,8 +21942,185 @@ Distributors/Agents
 EMS
 EMS-GRIVORY
 
-## Source: Verarbeitung Grivory HTV_c.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Process_Trouble-Shooting/Verarbeitung Grivory HTV_c.pdf
+## Source: Process_Trouble-Shooting_3_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Process_Trouble-Shooting/Process_Trouble-Shooting_3_20260308.pdf
+- source_ext: .pdf
+- parser_used: PyPDFLoader
+- fallback_used: False
+- parse_status: success
+- extracted_chars: 1801
+
+### Segment 1 (page 1)
+
+Grivory HT(耐高温尼龙): 注塑成型指导
+Grivory HT1/HT2 系列聚酰胺为玻璃纤维、碳纤维或矿粉增强的热塑性工程塑料。所有HT系列材料可用商用型抗磨损注射机进行加工。为了体现Grivory HT 系列产品的优异
+性能，在此提供以下技术要点。 本文仅为加工技术概要,详细资料可见材料物性数据手册(TDS)以及材料安全物性数据手册(MSDS)。
+预干燥及干燥条件： 料桶温度和融胶温度：
+Grivory HT融胶温度：
+模具温度：
+充填,保压和进料： 冷却时间及脱模：
+壁厚 (mm)
+Grivory HTV-5H1
+冷却时间 tC,
+(模具温度 140°C)
+冷却时间 tC,
+(模具温度 160°C)
+1 3 4
+2 7 9
+3 12 18
+4 22 32
+6 38 58
+
+料筒清洗及模具保养：
+Grivory HT-系列 喷嘴 加热段 3 加热段 2 加热段 1 进料段
+Grivory HT1… 330 -
+340°C
+330 -
+345°C
+330 -
+345°C
+330-
+340°C
+80 -
+100°C
+Grivory HT2… 310 -
+325°C
+315 -
+335°C
+315 -
+340°C
+315 -
+330°C
+60 -
+80°C
+
+Grivory HT-系列 模具温度[°C]
+Grivory HT1… 140 - 160°C
+Grivory HT2… 100 - 140°C
+
+极佳的产品外观和高熔接痕强度可通 过高射速和足够
+长的保压时间获得。在低螺杆转速和 低压下的进料时
+，要设置足够的冷却时间。
+具体建议：
+Grivory HT 系列材料出厂前已被干燥，并保存于密封
+袋中，可以直接使用。若材料受潮， 干燥中需注意以
+下要点： 过高的含水量会导致材料降解和性能下降。干燥温度若高于建议温度 ,则会导致材料氧化。氧化的标志之一
+是物料黄化(对于浅色材料)。
+Grivory HT 产品在经过一定的冷却时间 (tC)后即可顺利脱
+模。由于Grivory HT 的高刚性,应该避免脱模点不对称和
+强迫脱模。过高的融胶温度和过长的滞留时间会破坏材料性能 (热
+降解)。射出体积应大于料筒计量的50%
+。
+模温过低将会导致产品外观不良。
+z Grivory HT1...-
+系列: 330 - 345
+°C
+z Grivory HT2...-
+系列: 315 - 330
+°C
+z射出压力在 1000~2000 bar
+z短充填时间 0.5~3
+秒,具体根据制成品体积决定
+z保压范围在500~750 bar
+z5~15 bar
+的松退压力 (液压)和低螺杆转速 (5~15
+米/
+分钟，直线速度),设置足够的冷却时间
+z低松退
+“建议模具温度” 是指模具的表面温度。使用油温机或者
+功率足够大的水温机来控制模具温度。连接管线需具有
+高耐热性。
+z
+模具分模面排气道尺寸：深0.02 mm
+，宽 2-5 mm
+排气:
+为了避免烧焦痕和提高熔接线强度 , 模腔须添加适当的
+排气
+z
+干燥至物料含水量小于0.1%
+z
+干燥机露点为 -40°C
+z
+除湿干燥机最高干燥温度为 80°C,
+真空干燥机最高
+干燥温度为100°C
+z
+干燥时间：4~12
+个小时
+安全提示:
+成型过程中, 要配备个人安全防护装备。尤其要注意高
+温融胶和高模温。要避免材料过热分解。加工过程中产生的气体和烟应及时排出。
+脱模剂： Z260 (HASCO)或 Anti Seize (DEPAC)
+模具清洗：Lusin Clean L 21 (Klüber Chemie) ，清理
+模具内残渣要先加热模具。
+防腐蚀：模具表面使用 WD-40 (WD-40)喷雾
+生产结束后，对冷却系统进行除垢并且吹干水分，防
+止腐蚀生锈。
+射出机清洗：升高喷嘴和第三加热段的温度到360°C。
+用玻璃纤维增强的尼龙 66进行清洗。
+
+### Segment 2 (page 2)
+
+模具温度的影响 融胶温度的影响 料筒停留时间的影响
+加工工艺对产品的影响
+外
+观
+热
+变
+形
+温
+度
+低 模具温度 ...高
+硬
+度
+韧
+性
+抗
+化
+学
+性
+冲
+击
+强
+度
+可
+印
+刷性
+流
+动
+性
+低... 融胶温度 ...高
+强
+度
+流
+动
+性
+冲
+击
+强
+度
+螺
+杆
+磨
+损
+外
+观
+强
+度
+短... 停留时间 ...长
+抗
+化
+学
+性
+冲
+击
+强
+度
+外
+观
+
+## Source: Process_Trouble-Shooting_4_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Process_Trouble-Shooting/Process_Trouble-Shooting_4_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False

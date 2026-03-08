@@ -1,16 +1,16 @@
 # Technical_sheets
 
-- generated_at: 2026-03-07T06:54:45.769425+00:00
-- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge
+- generated_at: 2026-03-08T00:51:09.749408+00:00
+- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index
 
 ## Summary
-- sources: 6
-- segments: 29
-- characters: 60724
+- sources: 7
+- segments: 34
+- characters: 71713
 - failed_files: 0
 
-## Source: 1SBVX-30H LDS black E.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/1SBVX-30H LDS black E.pdf
+## Source: Technical_sheets_1_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_1_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -393,8 +393,8 @@ sheets
 
 www.emsgrivory.com
 
-## Source: 1SBVX-30H LDS schwarz D.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/1SBVX-30H LDS schwarz D.pdf
+## Source: Technical_sheets_2_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_2_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -777,8 +777,8 @@ schen Merkblätter
 
 www.emsgrivory.com
 
-## Source: Grilamid TR FE 11859 black 9675 TDS (EN) 22-07.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/Grilamid TR FE 11859 black 9675 TDS (EN) 22-07.pdf
+## Source: Technical_sheets_3_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_3_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -866,8 +866,8 @@ Domat/Ems, 21.7.2022
 APE, Tel.: +41 (0)81 / 632 71 76
 www.emsgrivory.com
 
-## Source: HT1V-3 FWA_black 9225_EN.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/HT1V-3 FWA_black 9225_EN.pdf
+## Source: Technical_sheets_4_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_4_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -1393,8 +1393,8 @@ data sheets.
 
 www.emsgrivory.com
 
-## Source: HT1V-3X UV black 9697_DE.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/HT1V-3X UV black 9697_DE.pdf
+## Source: Technical_sheets_5_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_5_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -1813,8 +1813,377 @@ schen Merkblätter
 
 www.emsgrivory.com
 
-## Source: TR 30 LS blau 4396 D.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/TR 30 LS blau 4396 D.pdf
+## Source: Technical_sheets_6_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_6_20260308.pdf
+- source_ext: .pdf
+- parser_used: PyPDFLoader
+- fallback_used: False
+- parse_status: success
+- extracted_chars: 10989
+
+### Segment 1 (page 1)
+
+TECHNISCHES MERKBLATT
+
+GRILAMID TR 30 LS
+BLAU 4396
+
+Allgemeine Produktbeschreibung
+
+Grilamid TR 30 LS blau 4396 ist ein hoch-
+transparentes, thermoplastisches Polyamid
+auf der Basis aliphatischer und cycloaliphati-
+scher Bausteine. Grilamid TR 30 LS blau
+4396 enthält ein Verarbeitungshilfsmittel zur
+Verbesserung der Fliess- und Entformeigen-
+schaften Zur Kompensation der materialin-
+härenten Eigenfarbe enthält Grilamid TR 30
+LS blau 4396 bereits das Masterbatch
+Grilamid MB XE 4066 blau 4548. Grilamid
+TR 30 LS blau 4396 zeichnet sich durch fol-
+gende besondere Eigenschaften aus:
+
+• sehr hohe Steifigkeit
+• gute Schlagzähigkeit
+• Transparenz
+• hohe Oberflächenhärte und -glanz
+• gute Kratzfestigkeit
+• Chemikalienbeständigkeit vor allem
+gegen Öle, Fette und Treibstoffe
+• Spannungsrissbeständigkeit
+• einfache Verarbeitung
+
+Grilamid TR 30 LS blau 4396 eignet sich
+sowohl für optisch als auch für technisch
+anspruchsvolle Teile in den Bereichen
+
+- Elektro / Elektronik
+- Maschinenbau, Pneumatik
+- Automobil
+
+### Segment 2 (page 2)
+
+2
+
+EIGENSCHAFTEN
+
+Mechanische Eigenschaften
+Norm Einheit Zustand TR 30 LS
+blau 4396
+Zug-E-Modul 1 mm/min ISO 527 MPa kond. 2800
+Streckspannung 50 mm/min ISO 527 MPa kond. 90
+Streckdehnung 50 mm/min ISO 527 % kond. 6
+Bruchspannung 50 mm/min ISO 527 MPa kond. *
+Bruchdehnung 50 mm/min ISO 527 % kond. >50
+Schlagzähigkeit Charpy, 23°C ISO 179/2-1eU kJ/m² kond. ohne Bruch
+Schlagzähigkeit Charpy, -30°C ISO 179/2-1eU kJ/m² kond. ohne Bruch
+Kerbschlagzähigkeit Charpy, 23°C ISO 179/2-1eA kJ/m² kond. 12
+Kerbschlagzähigkeit Charpy, -30°C ISO 179/2-1eA kJ/m² kond. 12
+Shore Härte D ISO 868 - kond. 86
+Kugeldruckhärte ISO 2039-1 MPa kond. 160
+* nicht relevant gemäss ISO 10350-1
+
+Thermische Eigenschaften
+Glasübergangstemperatur DSC ISO 11357 °C trocken 160
+Formbeständigkeit HDT/A 1.80 MPa ISO 75 °C trocken 125
+Formbeständigkeit HDT/B 0.45 MPa ISO 75 °C trocken 135
+Therm. Längenausdehnung längs 23-55°C ISO 11359 10-4/K trocken 0.6
+Therm. Längenausdehnung quer 23-55°C ISO 11359 10-4/K trocken 0.6
+Maximale Gebrauchstemperatur dauernd ISO 2578 °C trocken 80 - 100
+Maximale Gebrauchstemperatur kurzzeitig ISO 2578 °C trocken 120
+
+Elektrische Eigenschaften
+Durchschlagfestigkeit IEC 60243-1 kV/mm kond. 27
+Vergleichende Kriechwegbildung CTI IEC 60112 - kond. 600
+Spez. Durchgangswiderstand IEC 60093 Ω · m kond. 1011
+Spez. Oberflächenwiderstand IEC 60093 Ω kond. 1012
+
+Allgemeine Eigenschaften
+Dichte ISO 1183 g/cm³ trocken 1.15
+Brennbarkeit (UL94) 0.8 mm ISO 1210 Stufe - V2
+Wasseraufnahme 23°C/gesätt. ISO 62 % - 9
+Feuchtigkeitsaufnahme 23°C/50% r.F. ISO 62 % - 3.5
+Linearer Spritzschwund längs ISO 294 % trocken 0.65
+Linearer Spritzschwund quer ISO 294 % trocken 0.70
+
+Produkt-Bezeichnung nach ISO 1874: PA PA6I/X , GT, 12-030
+
+### Segment 3 (page 3)
+
+3
+
+Verarbeitungshinweise für die Spritzgiessverarbeitung von GRILAMID TR 30 LS blau 4396
+
+Das vorliegende technische Merkblatt für Grilamid
+TR 30 LS blau 4396 gibt Ihnen nützliche Hinweise
+für die Materialvorbereitung, die Maschinenanforde-
+rungen, den Werkzeugbau sowie die Verarbeitung.
+
+MATERIALVORBEREITUNG
+Grilamid TR 30 LS blau 4396 wird verarbeitungsfer-
+tig getrocknet geliefert. Die Säcke sind luftdicht
+verschweisst. Eine Vortrocknung ist daher nicht
+erforderlich.
+
+Lagerung
+Amorphe Polyamide sind mehrere Jahre lagerfähig
+ohne Einfluss auf die mechanischen Eigenschaften
+der Endprodukte. Wenn für Grilamid TR Produkte
+optimale Farbe oder Transparenz gefordert werden,
+soll die Lagerzeit 6 Monate nicht übersteigen und
+die Lagertemperatur so tief wie möglich gehalten
+werden. Oberhalb 25°C wird eine Oxidation im
+Granulat mit zunehmender Temperatur und Lage-
+rungsdauer beschleunigt und wird erst nach thermi-
+scher und mechanischer Belastung im Verarbei-
+tungsprozess als Verfärbung erkennbar.
+Als Lagerort empfiehlt sich ein trockener Raum, in
+dem die Säcke auch vor Beschädigung geschützt
+sind.
+
+Handhabung und Sicherheit
+Detaillierte Informationen können aus dem „Material
+Sicherheits Datenblatt“ (MSDS) entnommen wer-
+den, welches mit der Materialbestellung angefordert
+werden kann.
+
+Trocknung
+Grilamid TR 30 LS blau 4396 wird bei der Herstel-
+lung auf einen Wassergehalt von unter 0.08 % ge-
+trocknet und luftdicht verpackt. Sollte die Verpa-
+ckung beschädigt oder das Material zu lange offen
+gelagert worden sein, so muss das Granulat ge-
+trocknet werden. Ein zu hoher Wassergehalt kann
+sich durch einen beim Ausspritzen ins Freie
+schäumenden Schmelzekuchen und durch Silber-
+schlieren am Spritzgussteil äussern.
+
+Die Trocknung kann erfolgen im:
+
+Temperatur: max. 80°C
+Zeit: 4 - 12 Stunden
+Taupunkt der Trockenluft: < -30°C
+
+Temperatur: max. 100°C
+Zeit: 4 - 10 Stunden
+
+Umlufttrockner sind für Grilamid TR nicht geeignet.
+Zur Überprüfung/Überwachung des effektiven
+Feuchtegehalt empfiehlt sich die Verwendung von
+einem Feuchtemessgerät (z.B. Aboni oder Aquat-
+rac).
+Trockenzeit
+Bei nur wenig schäumendem Schmelzekuchen und
+leichten Silberschlieren am Spritzgussteil kann die
+minimale Trockenzeit genügen. Bei über Tage offen
+gelagertem Material mit stark schäumendem
+Schmelzekuchen, ungewöhnlich dünnflüssiger
+Schmelze, starken Schlieren und rauer Oberfläche
+am Spritzgussteil ist die maximale Trockenzeit nö-
+tig.
+
+Silberschlieren am Teil können auch
+durch Überhitzung der Schmelze (über
+320°C) oder durch zu lange Verweilzeit
+der Schmelze im Zylinder verursacht
+werden.
+
+Trocknungstemperatur
+Einen Hinweis auf eine oxidative Schädigung von
+Polyamiden gibt eine bei hellen Farben sichtbare
+Vergilbung. Im Trockenlufttrockner sollte die maxi-
+male Temperatur (80°C) nicht überschritten wer-
+den. Im Vakuumofen, bei geringerem Sauerstoff-
+partialdruck, ist eine höhere Temperatur (100°C)
+möglich. Um eine Vergilbung bei hellen Farben zu
+erkennen, ist es sinnvoll, eine kleine Granulatmen-
+ge als Vergleichsmuster zurückzuhalten.
+
+Zur Sicherstellung einer problemlosen Verarbeitung
+empfehlen wir das Material immer über einen Tro-
+ckenluftrockner zu verarbeiten.
+
+Wiederverwertung vom Regenerat
+Grilamid TR 30 LS blau 4396 ermöglicht als ther-
+moplastischer Kunststoff eine Aufbereitung fehler-
+hafter Teile und Angussverteiler zu Mahlgut. Eine
+anteilige Rückführung des Regenerat in den Spritz-
+giessprozess ist möglich wobei folgende Punkte zu
+berücksichtigen sind:
+§ keine thermische Schädigung bei der vorange-
+gangenen Verarbeitung
+§ keine Verschmutzung durch Fremdmaterial,
+Staub, Öl usw.
+§ Regenerat muss trocken und staubfrei sein
+
+Bei der Zuführung von Regenerat muss der Verar-
+beiter besondere Sorgfalt walten lassen. Für hoch-
+wertige technische Teile sollte nur Neuware ver-
+wendet werden.
+
+!
+Trockenlufttrockner
+Vakuumofen
+
+### Segment 4 (page 4)
+
+4
+MASCHINENANFORDERUNGEN
+
+Grilamid TR 30 LS blau 4396 lässt sich auf allen für
+Polyamid geeigneten Spritzgiessmaschinen verar-
+beiten.
+
+Schnecke
+Verschleissgeschützte Universalschnecken mit
+Rückstromsperre sind zu empfehlen (3 Zonen).
+
+Länge: 18 - 25 D
+Kompressionsverhältnis: 2 - 2.5
+
+Schussvolumen
+Der Dosierweg muss in jedem Fall (ohne Dekom-
+pressionsweg) länger sein als die Länge der Rück-
+stromsperre.
+
+Schussvolumen = 0.5 - 0.9 x
+max. Dosiervolumen der Spritzeinheit
+
+Heizung
+Mindestens drei separat regelbare Heizzonen soll-
+ten Zylindertemperaturen von bis zu 350°C erzeu-
+gen können. Eine separate Düsenheizung ist not-
+wendig. Der Zylinderflansch muss temperierbar
+sein (Stockkühlung).
+
+Düse
+Offene Düsen mit exakter Temperierung sind zu
+bevorzugen. Es besteht jedoch die Gefahr, dass
+beim nötigen Schneckenrückzug nach dem Dosie-
+ren (Dekompression) Luft mit eingezogen wird.
+Werden Verschlussdüsen verwendet, so ist die
+Friktionserwärmung und der Druckverlust so gering
+wie möglich zu halten. Axiale Schiebever-
+schlussdüsen sind ungeeignet.
+
+Zuhaltekraft
+Die Maschinenzuhaltekraft kann nach folgender
+Faustformel abgeschätzt werden:
+
+WERKZEUGBAU
+Für die Auslegung der Werkzeuge gelten die für
+transparente Thermoplaste üblichen Richtlinien.
+Für die formbildenden Bereiche genügen übliche
+verschleissfeste Werkzeugstähle (durchhärtende
+Stähle, Einsatzstähle etc.), welche auf ca. 56 HRC
+gehärtet werden sollten.
+
+Entlüftung
+Für Grilamid TR 30 LS blau 4396 sind Entlüftungen
+am Fließwegende oder an Stellen im Werkzeug,
+wo Schmelzeströme zusammenfließen, wichtig.
+Entlüftungen ausserhalb der Trennebene sind über
+zusätzliche freigeschliffene Ausstosser vorzusehen
+(0.02 mm).
+
+Anguss / Anschnitt
+Ein zentraler Stangenanguss im Bereich der gröss-
+ten Wanddicke ist der sicherste Weg zu guter
+Formfüllung und zur Vermeidung von Einfallstellen.
+Punktanschnitt (direkt) oder Tunnelanguss sind
+aber wirtschaftlicher und auch bei technischen
+Teilen üblich.
+
+Um ein zu frühes Einfrieren zu vermeiden und um
+die Formfüllung nicht zu erschweren, gilt:
+
+0.8 x grösste Wanddicke des Spritzgiess-
+teils
+
+1.4 x grösste Wanddicke des Spritzgiess-
+teils (jedoch mindestens 4 mm)
+
+VERARBEITUNG
+
+Grundeinstellungen
+Als Grundeinstellung für die Verarbeitung von
+Grilamid TR 30 LS blau 4396 hat sich folgendes
+Prozessbedingungen bewährt.
+
+Flansch min. 60°C
+Zone 1 260-280°C
+Zone 2 270-290°C
+Zone 3 290-300°C
+Düse 280-300°C
+Werkzeug 80-120°C
+Masse 290-310°C
+
+Nachdruck (spez.) 400 - 600 bar
+Staudruck (spez.) 50 - 150 bar
+Schneckenumfangsgeschw. 0.05 - 0.3 m/s
+
+Die Einspritzgeschwindigkeit sollte gegen Ende des
+Füllvorgangs reduziert werden, um Materialver-
+brennungen zu vermeiden. Für das Dosieren sollte
+die Restkühlzeit maximal ausgenutzt werden.
+
+7.5 kN1) x projizierte Fläche (cm2)
+
+1) Forminnendruck 750 bar
+Zuhaltekraft
+Anschnittdurchmesser
+Angussdurchmesser
+Temperaturen
+Nachdruck / Dosierung
+Auswahl der Spritzeinheit
+
+### Segment 5 (page 5)
+
+5
+KUNDENDIENSTLEISTUNGEN
+
+EMS-GRIVORY ist Spezialist in der Polyamidsyn-
+these und Polyamidverarbeitung. Unsere Dienst-
+leistungen umfassen nicht nur die Herstellung und
+Lieferung von technischen Thermoplasten, wir bie-
+ten vielmehr auch eine vollständige technische
+Unterstützung an:
+
+§ Rheologische Formteilauslegung / FEM
+§ Prototypenwerkzeuge
+§ Materialauswahl
+§ Verarbeitungsunterstützung
+§ Formteil- und Werkzeugdesign
+
+Wir beraten Sie gerne. Nehmen Sie einfach Kontakt
+mit unseren Verkaufsbüros auf.
+
+Die Angaben in dieser Veröffentlichung entsprechen dem
+heutigen Stand unserer Erkenntnisse und Erfahrungen.
+Sie sind als unverbindliche Richtwerte zu verstehen und
+stellen insbesondere keine Materialspezifikation dar. Eine
+Garantie in Bezug auf Eigenschaften, Anwendung, Eig-
+nung, Design und Verarbeitung kann aus unseren Anga-
+ben nicht abgeleitet werden. Die Angaben befreien den
+Abnehmer nicht von eigenen Untersuchungen zur Eig-
+nung, zur Einhaltung gesetzlicher Vorschriften sowie
+etwaiger Schutzrechte. Wir behalten uns vor, die Anga-
+ben in dieser Veröffentlichung jederzeit ohne Ankündi-
+gung zu ändern. Die Angaben bedeuten keine vertragli-
+che Verpflichtung unsererseits und jegliche Haftung wird
+ausdrücklich ausgeschlossen. Für weitergehende Fragen
+über unsere Produkte stehen Ihnen unsere Experten
+gerne zur Verfügung.
+
+Erstellt: WIS / 09.2010 Aktualisiert: SCTS / 06.2014
+
+Diese Version ersetzt die vorherigen produktspezifischen
+Merkblätter.
+
+www.emsgrivory.com
+
+## Source: Technical_sheets_7_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_7_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False

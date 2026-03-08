@@ -1,0 +1,245 @@
+{
+  "generated_at": "2026-03-08T00:47:51.516097+00:00",
+  "records": [
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Certifications/ACS Grilamid LBV-50H FWA black 9225 18-12.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Certifications/Certifications_3_20260308.pdf",
+      "subfolder": "Certifications",
+      "index": 3,
+      "date": "20260308",
+      "fingerprint": "700834:1546969530000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Certifications/ACS Grilamid LV-65H FWA natural 21-02.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Certifications/Certifications_4_20260308.pdf",
+      "subfolder": "Certifications",
+      "index": 4,
+      "date": "20260308",
+      "fingerprint": "541071:1614022514000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/competitors/04052024_Akulon_Ultraflow_K-FKGS6_B.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/competitors/competitors_2_20260308.pdf",
+      "subfolder": "competitors",
+      "index": 2,
+      "date": "20260308",
+      "fingerprint": "170952:1772850970956163143"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/competitors/Competitor Price from Monthly Report_I&C.xlsx",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/competitors/competitors_3_20260308.xlsx",
+      "subfolder": "competitors",
+      "index": 3,
+      "date": "20260308",
+      "fingerprint": "22561:1772043086000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Development/AD-TCS_Key Projects overview_2026-01.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Development/Development_2_20260308.pdf",
+      "subfolder": "Development",
+      "index": 2,
+      "date": "20260308",
+      "fingerprint": "2634493:1769592860000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Development/AD-TCS_Key Projects overview_2026-02.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Development/Development_3_20260308.pdf",
+      "subfolder": "Development",
+      "index": 3,
+      "date": "20260308",
+      "fingerprint": "2229387:1772024612000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/High_Performing_Polymers_HPP_Market_General/HPP_deep-research-report_summary.md",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/High_Performing_Polymers_HPP_Market_General/High_Performing_Polymers_HPP_Market_General_1_20260308.md",
+      "subfolder": "High_Performing_Polymers_HPP_Market_General",
+      "index": 1,
+      "date": "20260308",
+      "fingerprint": "25862:1772663914334833196"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/2025-12-04_XUBI_Shangwei_+.docx",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_1_20260308.docx",
+      "subfolder": "market-rep",
+      "index": 1,
+      "date": "20260308",
+      "fingerprint": "32619:1765141784000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/2025-12-05_XUBI_Moons'.docx",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_3_20260308.docx",
+      "subfolder": "market-rep",
+      "index": 3,
+      "date": "20260308",
+      "fingerprint": "33119:1765136400000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/20260223_Murakoshi_Door Guide Tool_Grilamid 2D 20 natural_SASN.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_4_20260308.pdf",
+      "subfolder": "market-rep",
+      "index": 4,
+      "date": "20260308",
+      "fingerprint": "1447623:1771854402000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/ADC Asia Monthly Management Report 2026-01.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_5_20260308.pdf",
+      "subfolder": "market-rep",
+      "index": 5,
+      "date": "20260308",
+      "fingerprint": "693514:1769593000000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/ADC Asia Monthly Management Report 2026-02.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_6_20260308.pdf",
+      "subfolder": "market-rep",
+      "index": 6,
+      "date": "20260308",
+      "fingerprint": "388178:1772120768000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/ADC Asia Monthly Report 2026-01.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_7_20260308.pdf",
+      "subfolder": "market-rep",
+      "index": 7,
+      "date": "20260308",
+      "fingerprint": "120602:1769690650000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/I&C_VR_02_Dec_2025_Nanmu.docx",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_8_20260308.docx",
+      "subfolder": "market-rep",
+      "index": 8,
+      "date": "20260308",
+      "fingerprint": "32472:1765150582000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/I&C_VR_28_Jan_2026_Technimark.docx",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_9_20260308.docx",
+      "subfolder": "market-rep",
+      "index": 9,
+      "date": "20260308",
+      "fingerprint": "33595:1769631658000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Metal_Replacement/003_410_Flow Meter Rod_Grivory GV-5H_1609.pptx",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Metal_Replacement/Metal_Replacement_1_20260308.pptx",
+      "subfolder": "Metal_Replacement",
+      "index": 1,
+      "date": "20260308",
+      "fingerprint": "571320:1714788420000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Metal_Replacement/005_410_Cartridges of Sanitary_Grilamid LBV-50H FWA_1706.pptx",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Metal_Replacement/Metal_Replacement_3_20260308.pptx",
+      "subfolder": "Metal_Replacement",
+      "index": 3,
+      "date": "20260308",
+      "fingerprint": "340088:1714788420000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Metal_Replacement/202401 - Metal Replacement.pptx",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Metal_Replacement/Metal_Replacement_4_20260308.pptx",
+      "subfolder": "Metal_Replacement",
+      "index": 4,
+      "date": "20260308",
+      "fingerprint": "21273690:1705690640000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Process_Trouble-Shooting/eBOOK Kulkarni Robust Process Development and Scientific Molding 2E.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Process_Trouble-Shooting/Process_Trouble-Shooting_1_20260308.pdf",
+      "subfolder": "Process_Trouble-Shooting",
+      "index": 1,
+      "date": "20260308",
+      "fingerprint": "18958462:1694427906000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Process_Trouble-Shooting/EMS-GRIVORY Injection Molding Trouble Shooting Guide(English Version, Second Edition, 2022).pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Process_Trouble-Shooting/Process_Trouble-Shooting_2_20260308.pdf",
+      "subfolder": "Process_Trouble-Shooting",
+      "index": 2,
+      "date": "20260308",
+      "fingerprint": "24028842:1717751692000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Process_Trouble-Shooting/Verarbeitung Grivory HTV_c.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Process_Trouble-Shooting/Process_Trouble-Shooting_4_20260308.pdf",
+      "subfolder": "Process_Trouble-Shooting",
+      "index": 4,
+      "date": "20260308",
+      "fingerprint": "118455:1244514502000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Success_Cases/757_18_Lichtschranke.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Success_Cases/Success_Cases_2_20260308.pdf",
+      "subfolder": "Success_Cases",
+      "index": 2,
+      "date": "20260308",
+      "fingerprint": "76962:1755595144000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Success_Cases/758_18_GPS-Box.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Success_Cases/Success_Cases_3_20260308.pdf",
+      "subfolder": "Success_Cases",
+      "index": 3,
+      "date": "20260308",
+      "fingerprint": "111574:1755595134000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Success_Cases/762_18_Gleitschiene-STEWI.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Success_Cases/Success_Cases_4_20260308.pdf",
+      "subfolder": "Success_Cases",
+      "index": 4,
+      "date": "20260308",
+      "fingerprint": "205814:1755595098000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/1SBVX-30H LDS black E.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_2_20260308.pdf",
+      "subfolder": "Technical_sheets",
+      "index": 2,
+      "date": "20260308",
+      "fingerprint": "41671:1367531940000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/1SBVX-30H LDS schwarz D.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_3_20260308.pdf",
+      "subfolder": "Technical_sheets",
+      "index": 3,
+      "date": "20260308",
+      "fingerprint": "45463:1433278800000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/Grilamid TR FE 11859 black 9675 TDS (EN) 22-07.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_4_20260308.pdf",
+      "subfolder": "Technical_sheets",
+      "index": 4,
+      "date": "20260308",
+      "fingerprint": "38661:1658427716000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/HT1V-3 FWA_black 9225_EN.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_5_20260308.pdf",
+      "subfolder": "Technical_sheets",
+      "index": 5,
+      "date": "20260308",
+      "fingerprint": "188203:1438903902000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/HT1V-3X UV black 9697_DE.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_6_20260308.pdf",
+      "subfolder": "Technical_sheets",
+      "index": 6,
+      "date": "20260308",
+      "fingerprint": "159147:1416855464000000000"
+    },
+    {
+      "source_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge/Technical_sheets/TR 30 LS blau 4396 D.pdf",
+      "target_path": "/home/gabri/udemy/llm_engineering/myRAG_knowledge_index/Technical_sheets/Technical_sheets_7_20260308.pdf",
+      "subfolder": "Technical_sheets",
+      "index": 7,
+      "date": "20260308",
+      "fingerprint": "41427:1402420066000000000"
+    }
+  ]
+}

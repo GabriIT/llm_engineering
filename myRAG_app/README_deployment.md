@@ -31,6 +31,63 @@ echo "MYRAG_COLLECTION=$MYRAG_COLLECTION"
 For full local ingest mode commands, see:
 `myRAG_app/README_Ingest.md`
 
+For PostgreSQL/pgvector thread memory setup (local + VPS), see:
+`myRAG_app/README_thread_memory_postgres.md`
+
+## PostgreSQL Thread Memory (VPS Quick Commands)
+If you want server-side thread memory persistence:
+
+```bash
+ssh ubuntu@154.12.245.254
+sudo apt update
+sudo apt install -y postgresql postgresql-contrib
+PG_MAJOR="$(psql -V | awk '{print $3}' | cut -d. -f1)"
+sudo apt install -y "postgresql-${PG_MAJOR}-pgvector"
+sudo systemctl enable --now postgresql
+```
+
+```bash
+sudo -u postgres psql <<'SQL'
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'postgresql') THEN
+    CREATE ROLE postgresql LOGIN PASSWORD 'postgresql';
+  ELSE
+    ALTER ROLE postgresql WITH LOGIN PASSWORD 'postgresql';
+  END IF;
+END
+$$;
+SQL
+```
+
+```bash
+sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='myRAG_threads'" | grep -q 1 || \
+sudo -u postgres createdb -O postgresql myRAG_threads
+PGPASSWORD=postgresql psql -h 127.0.0.1 -U postgresql -d myRAG_threads -c "CREATE EXTENSION IF NOT EXISTS vector;"
+```
+
+In `/home/ubuntu/myrag-deploy/myRAG_app/deploy/.env.vps`, set:
+```bash
+MYRAG_THREADS_ENABLED=1
+MYRAG_THREADS_DB_HOST=172.17.0.1
+MYRAG_THREADS_DB_PORT=5432
+MYRAG_THREADS_DB_NAME=myRAG_threads
+MYRAG_THREADS_DB_USER=postgresql
+MYRAG_THREADS_DB_PASSWORD=postgresql
+MYRAG_THREADS_DB_SSLMODE=disable
+MYRAG_THREADS_VECTOR_DIMS=3072
+MYRAG_THREADS_RECENT_MESSAGES=10
+MYRAG_THREADS_SEMANTIC_TOP_K=6
+MYRAG_THREADS_MAX_HISTORY_MESSAGES=24
+```
+
+Then redeploy and verify:
+```bash
+cd /home/ubuntu/myrag-deploy
+bash myRAG_app/deploy/scripts/deploy_compose.sh
+curl -s http://127.0.0.1:18000/api/health
+```
+
 ## Fast Update (Existing VPS Deployment)
 
 Use this when `/RAG-mat` is already deployed and you want the newest code.

@@ -1,4 +1,5 @@
 python-dotenv
+psycopg[binary]
 ipykernel
 ipywidgets
 requests

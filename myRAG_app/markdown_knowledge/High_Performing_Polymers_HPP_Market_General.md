@@ -1,7 +1,7 @@
 # High_Performing_Polymers_HPP_Market_General
 
-- generated_at: 2026-03-07T06:54:45.763022+00:00
-- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge
+- generated_at: 2026-03-08T00:51:09.747520+00:00
+- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index
 
 ## Summary
 - sources: 0

@@ -1,16 +1,16 @@
 # market-rep
 
-- generated_at: 2026-03-07T06:54:45.763063+00:00
-- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge
+- generated_at: 2026-03-08T00:51:09.747577+00:00
+- knowledge_root: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index
 
 ## Summary
-- sources: 8
-- segments: 48
-- characters: 100797
+- sources: 11
+- segments: 53
+- characters: 115950
 - failed_files: 0
 
-## Source: 2025-12-04_XUBI_Shangwei_+.docx
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/2025-12-04_XUBI_Shangwei_+.docx
+## Source: market-rep_1_20260308.docx
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_1_20260308.docx
 - source_ext: .docx
 - parser_used: Docx2txtLoader
 - fallback_used: False
@@ -157,8 +157,8 @@ The mold temperature was raised from 70° C to 90° C.Gears made of 300pcs of TS
 
 1
 
-## Source: 2025-12-05_XUBI_Moons'.docx
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/2025-12-05_XUBI_Moons'.docx
+## Source: market-rep_2_20260308.docx
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_2_20260308.docx
 - source_ext: .docx
 - parser_used: Docx2txtLoader
 - fallback_used: False
@@ -305,8 +305,156 @@ Other products use Dupont's PA66, but in small quantities.The customer's outsour
 
 2
 
-## Source: 20260223_Murakoshi_Door Guide Tool_Grilamid 2D 20 natural_SASN.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/20260223_Murakoshi_Door Guide Tool_Grilamid 2D 20 natural_SASN.pdf
+## Source: market-rep_3_20260308.docx
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_3_20260308.docx
+- source_ext: .docx
+- parser_used: Docx2txtLoader
+- fallback_used: False
+- parse_status: success
+- extracted_chars: 3226
+
+### Segment 1
+
+UBGS I&C Sales Visit Report
+
+KAS_XUBI / Date:5.12.2025
+
+CN Team: Industry
+
+Team Region: NCN
+
+Top Applications: No
+
+====================================================
+
+Visit & Account Information
+
+Customer Name: Moons’ Electrical Appliance (Taicang) Co., LTD
+
+Contact Person(s):Wang Zhixian
+
+Contact Person(s) Role:Purchasing Manager
+
+Attendees (Customer): Wang Zhixian
+
+Attendees (EMS):XUBI
+
+Target Customer No
+
+Visit Type Multiplicate Projects
+
+Specific Requirements Description for Projects
+
+Project Block (repeat for Project 1, Project 2, …)
+
+Project 1 Overview
+
+Project Name: Motor coil bracket
+
+Customer OEM:Moons'
+
+Tier 1:Moons'
+
+Molder names: Moons'
+
+Application: Coil bracket
+
+MR No
+
+EMS Material PFAM GV
+
+If Other (details):
+
+Full EMS Material name (GV-5H Black)
+
+Current Material (Metal/Polymer) (GV-5H Black)
+
+Part Description / Short description of component & function: Support coil winding
+
+Project Status P
+
+SOP Date (2026-12):
+
+Project 1 Business Data
+
+Potential [t/a] : 20
+
+Estimated Annual Part Volume (pcs/year):
+
+Current Materials Used:GV-5H
+
+Target Price [CNY/kg]: 55 with VAT
+
+Target Part Cost vs Metal (e.g. “–15% total cost vs metal”): ________________________________
+
+Competitor (Material / Supplier) Name of competitor & grade : ________________________________
+
+Competitor’s Price [CNY/kg]:
+
+________________________________
+
+Target Positioning vs Competitor (e.g. “same price, better performance”; “higher price, weight -30%”):___________________________________
+
+__________________________________________________________
+
+Project 1 – Technical Requirements & CATS Needs
+
+Key Performance Requirements (e.g. pressure, burst strength, creep, fatigue, transparency, dimensional stability, high temperature / creep resistance)
+
+dimensional stability
+
+Operating Temperature Range (-30 to +100 °C)
+
+Chemical / Media Exposure (No.)
+
+Mechanical Load / Safety Critical? Yes
+
+If Details: __________________
+
+Regulatory & Standards (e.g. UL, FWA, FDA etc.) Details
+
+Tolerance & Dimensional Requirements - Details / Drawings
+
+CATS Required No
+
+Available Data from Customer Choose an item.
+
+Tooling Status ExistingTool
+
+Project 1 - Customer Requirements Description
+
+Function & performance expectations
+
+Reasons to consider Metal Replacement (MR) (weight reduction, corrosion, cost, design freedom, etc.)
+
+Constraints (material approvals, supplier list, price ceiling, max part weight, etc.)
+
+Risks / Concerns from Customer (e.g. “fear of creep”, “appearance issues”, “tooling cost”, “approval time”)
+
+Project 1 – Next Actions
+
+Action
+
+Responsible
+
+/ Date (YYYY-MM-DD)
+
+Request price and feed back to customer
+
+XUBI
+
+2025-12-15
+
+Other Remarks
+
+The annual sales volume of the customers is 2.6 to 2.7 billion yuan.The GV-5H was previously purchased from a local distributor in Kunshan.At present, the usage of this model has increased. Customers want to reduce costs and switch to regular channels.The price is required to be within 55CNY/kg including tax.
+
+Other products use Dupont's PA66, but in small quantities.The customer's outsourced purchase amount is 15 million yuan. The PA66+30GF of Golden Hair is available, with a cost of 16 to 18CNY/kg (excluding tax), Pot of 500t. _________________________
+
+2
+
+## Source: market-rep_3_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_3_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -985,8 +1133,8 @@ XXXFNTHSJWPSZDPN
 ܘ
 4
 
-## Source: ADC Asia Monthly Management Report 2026-01.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/ADC Asia Monthly Management Report 2026-01.pdf
+## Source: market-rep_4_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_4_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -3574,8 +3722,8 @@ Test quantity2) 212 240 -12%
 1) TI = Technical Inquiries;
 2) Test quantity = No. of TI x No. of tests per TI; reflects actual work load
 
-## Source: ADC Asia Monthly Management Report 2026-02.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/ADC Asia Monthly Management Report 2026-02.pdf
+## Source: market-rep_5_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_5_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -4280,8 +4428,8 @@ Test quantity2) 545 712 -23%
 1) TI = Technical Inquiries;
 2) Test quantity = No. of TI x No. of tests per TI; reflects actual work load
 
-## Source: ADC Asia Monthly Report 2026-01.pdf
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/ADC Asia Monthly Report 2026-01.pdf
+## Source: market-rep_6_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_6_20260308.pdf
 - source_ext: .pdf
 - parser_used: PyPDFLoader
 - fallback_used: False
@@ -4437,8 +4585,8 @@ Best regards,
 
 M. Fenner
 
-## Source: I&C_VR_02_Dec_2025_Nanmu.docx
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/I&C_VR_02_Dec_2025_Nanmu.docx
+## Source: market-rep_7_20260308.docx
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_7_20260308.docx
 - source_ext: .docx
 - parser_used: Docx2txtLoader
 - fallback_used: False
@@ -4577,8 +4725,315 @@ Main application is target on industrial chemical packaging and cosmetics flexib
 
 1
 
-## Source: I&C_VR_28_Jan_2026_Technimark.docx
-- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge/market-rep/I&C_VR_28_Jan_2026_Technimark.docx
+## Source: market-rep_7_20260308.pdf
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_7_20260308.pdf
+- source_ext: .pdf
+- parser_used: PyPDFLoader
+- fallback_used: False
+- parse_status: success
+- extracted_chars: 8509
+
+### Segment 1 (page 1)
+
+UBGS – ADC CONFIDENTIAL Suzhou, 29 January 2026
+M. Fenner Tel. 8201
+Page 1 of 3
+
+To: N. Melillo
+
+Monthly Report UBGS – ADC January 2026
+
+1. Segment Information
+1.1 Automotive
++ Weifu (CN), Isolation Sleeve, Grinova H XE 11602 Black 9230 (GF50H), Pot. 32 t/a, SOP Q4
+2026
+OEM MI. Mold trial finished in Dongli. Assembly done and functional test is ongoing in Weifu
+Nanjing. Next step is to follow up the test result. (SHIK)
+- DFFB, Plastic Gear Fork, Grinova H XE 11627 Black 9205 (GF60H), Pot. 15 t/a, SOP
+12.2026
+OEM GMW. Tier 1 is DFFB, total cost saving about 10%. The customer changed the design
+requirements and boundary conditions for the fourth time and continues expects the fastest
+possible responses by ADC. The FEA analysis is ongoing. Sales and ADC hold regular technical
+meetings with DFFB to exchange the progress. (XUJR/XUER)
++ Ningbo Fengmei Precision (CN), Injection Busbar , Grivory HT2VZ-15H Orange, Pot. 202 t/a,
+SOP Q2 2026
+OEM Geely. The customer faced the color mismatch and part sticking problems with Kingfa Vynyl
+53G15HS. EMS material is without problems. Function tests passed. Next step is to support the
+pilot production. (HULO)
++ WXQC (CN), EPB Gear Bracket, G
+rivory HTV-5H1 Black 9205, Pot. 21 t/a, SOP Q3 2026
+OEM BYD. FEA is complete and reported to the customer. Theoretically Max. Torque result is 90
+Nm, which can achieve the same performance as powder metallurgy parts. Next step: support the
+mold trial at Sinotech. (XUER/CHFI)
+- Paragon (CN), Folding Table, Grilamid TR XE 4139 Black 9231, Pot. 27 t/a, SOP Q2 2026
+OEM Benz. Warpage of molded part cannot be solved by optimizing process parameters. ADC
+suggested to change main runner from nozzle side to ejector side. The customer will do a MFA to
+check the performance of this change. Next step: follow up the MFA by end of Jan. (LIPE)
++ Dongfeng-yipai, Lamella r Bar, Grivona S XE 10767 Black 9915 (GF35), Pot. 20 t/a, SOP Q3
+2026
+OEM Dongfeng-yipai. The appearance of Grinova S molded with an old tool was accepted by
+OEM and Tier1. The new tool will be made according to Grinova S. Next step EMS will support th
+e
+MFA in Feb. (ZHZA)
++ Hongqi (CN), Cooling Oil Pipe, Grivory HTV-4H1 Black 9205, Pot. 20 t/a, SOP Q1 2027
+OEM Hongqi. Hongqi started metal replacement project for Cooling Oil Pipe and sent the 3D
+drawing to EMS for FEA. Next step: Follow FEA result in March. (ZHZA)
++ Rixin (CN), Cable Protective Laye r, Grilamid L 20 G Natural, Pot. 20 t/a, SOP 02.2026
+OEM Various. Rixin got the order from the end-user, project is SOP. Next step: follow up the mass
+production. (HUAB)
++ Gausselec, Current Sensor, Grivory HT XE 4027 Black 9916 (HT3-GF30 V0), Pot. 15 t/a, SOP
+Q2 2026
+OEM Geely. The function tests of the part passed. Next step: support pilot production. (LIJT)
++ B-Connector (CN), Cooling Line, Grilamid 2D 25 W 20 HLX Black 9992, Pot. 20 t/a, SOP Q2
+2026
+OEM Geely. EMS recommend Grilamid 2D 25 W 20 HLX for Geely to improve production yield
+rate, suggested customer to make a new Die and Pin. The Extrusion trial is schedule for end of
+Jan. (HAOG)
++ Stanley (JP), Adjustment Bolt, Grivory HT1VS-5H, Pot. 80 t/a, SOP 04.2029
+OEM HONDA. The lamp evaluations have been successfully passed including vibration, impact
+and thermal cycle tests. Additional durability testing under more harsh conditions is scheduled to
+be completed by middle of Jan. (KOTY)
+cc: ADC UBGS P. Gieriet T. Yamaki T. Fan
+G. Castaldi B. Pan Y. Qiu Ch. Kruse
+T. Wabnitz F. Himbert M. Hoffmann B. Hoffmann
+J. Guble r U. Michel H. Xu Sales UBGS
+
+### Segment 2 (page 2)
+
+UBGS – ADC CONFIDENTIAL Suzhou, 29 January 2026
+M. Fenner Tel. 8201
+Page 2 of 3
+
+1.2 Industry & Consumer
++ Nexeo/Quinovare (CN), Pre-filled Syringe, Gr ilamid TR 90 Nat, Pot. 20t/a, SOP 12.2027
+New needle free PFS(Pre-filled Syringe) with be tter chemical resistance material. COC couldn't
+reach good welding line strength. Sampling done after venting improvement. Obtain test result by
+31st Jan. (LICR)
++ Siweiyi/Dreame (CN), Arm Cover, Grilamid TR 55, Pot. 10t/a, SOP 06.2026
+New designed part for domestic robot, requires hi gh gloss surface, hot water resistance and
+chemical resistance. Support trial run by 10th Mar. (JIAW)
++ Haier (CN), Water Heater Filter, Grivory GVN-35H, Pot. 10t/a, SOP 10.2026
+New project for water heater filter module was developed by Haier and GVN-35H was
+specified because of success cases in previous similar application. On site trial supported
+and 30 pcs samples were molded. Obtain test results by 30
+th Jan. (ZHBR)
++ SJS (CN), Fracking Plug Slip, Grinova H XE 11627 (H GF60), Pot. 8t/a, SOP 02.2027
+FEA was shared to customer and customer decided to CNC prototype slip for test. Samples were
+sent to customer and CNC is ongoing. Support fracking test by 27th Feb. (JIAW/XUER)
++ Cretia/Google (CN), Drone, Grivor y GVX-5H, Pot. 150t/a, SOP 06.2026
+Trial finished and 4.5t was delivered, 5,000 sets pilot run planned in Q1 2026. Support pilot run by
+28th Feb. (LINR)
++ BYD/BAT (CN), HnB E-cigarette Charger Housing, Grilamid LV-5H, Pot. 100t/a, SOP 04.2026
+New material development for impact modified Grilamid TRV is ongoing by ECCH R&D. Obtain
+development progress and sample materials for trial by 14th Mar. (ZHUE)
++ Hualong/Yadea (CN), E-scooter Display, XE 11119 (GV-GFX50 V0), Pot. 100t/a, SOP 03.2026
+1st pilot run finished without problem, 2t material was ordered for 2nd pilot run. Support 2nd pilot run
+by 28th Feb. (ZHVI)
+- Hongfa (CN), High Voltage Fuses, Grivory XE 4027 (HT3V-GF30 V0), Pot. 50t/a, SOP 09.2026
+XE 4027 failed at 1kV @ 50kA short-circuit test. Hongfa arranged 2nd shot-circuit test to double
+confirm the root cause (EMS material or other components). Obtain result by 20th Feb. (XIOX)
++ Chint (CN), Temp&Pressure Sensor, Grivory XE 4027 (HT3-GF30 V0), Pot. 15t/a, SOP
+05.2026
+Most verification tests have been passed, only "Temperature and humidity fatigue test" is ongoing
+with low risk. Get the test results by Feb. 2026 (YUPE)
++ T
+K-mold/Polycom (CN), Headband, Grilamid TR 90, Pot. 20t/a, SOP 03.2026
+Stress mark has been solved by adding 4% MB XE 3855. Already received mass production
+order from customer. (XUEA)
++ Sansheng/Grandsire (CN), Ball Valve, Grivory HT1V-5 FWA, Pot. 50t/a, SOP 06.2026
+JLT (2nd molder) part passed all test and pilot run production start. Around 19 ton material was
+delivered for two molders (Chuandibai & JLT). Track mass production status by 10th Mar. (JIAJ)
++ Yuhua/Xinling (CN), Heat Pump Ball Valve, Grivory GVX-6H, Pot. 30t/a, SOP 09.2026
+Aging test finished and 3 part cracked out of 10 samples. Root cause was identified as design
+rather than material. Visit customer for tooling optimization by 10th Feb. (JIAJ)
++ Zili/Hikvision (CN), AGV Pulley, Grivory GV XE 10571 (GV-5H LF), Pot. 20t/a, SOP 06.2026
+Metal replacement with cost saving >40%. Tooling was ready but sampling part met noise and
+wear issue in operation test. Measures as lubricant oil & additional anti-wear plate were
+implemented for 2nd round test. Obtain test results by 15th Mar. (JIAJ)
++ Jushen (CN), Robot Dog Legs, Grivory GVL-5H HP, Pot. 20t/a, SOP 12.2026
+New design for medium size robot dog (self-weight 30kg, rated load 30kg), requiring no fracture
+@ 5-g impact loading. MFA report delivered. Track tooling status by 28th Feb. (ZHUP/XUER)
++ Linquan/Unitree, Humanoid Robot Foot, Grivory GVL-6H HP, Pot. 15t/a, SOP 09.2026
+Problem solving of Kingfa PPA-GF50 crack issue in impact test. Sampling supported and molded
+part passed test. 200kg order received. Track pilot run status by 30th Mar. (ZHUP)
++ TOTO (JP), Faucet Lever, Grivory HTM-4H, Pot. 10t/a, SOP 03.2027
+TOTO started plating test for test pieces at alternative plating company because previous plating
+company is difficult to adjust etching condition for GM-4H and HTM-4H. Check intermediate test
+result by the end of January. (OZAN)
+
+### Segment 3 (page 3)
+
+UBGS – ADC CONFIDENTIAL Suzhou, 29 January 2026
+M. Fenner Tel. 8201
+Page 3 of 3
+
+2. Market Trends
+- Donut Lab introduces its solid-state battery to power production vehicles at CES. Donut Lab
+introduced the world’s first solid-state battery that is ready for use in OEM vehicle manufacturing.
+The battery delivers 400 Wh/kg of energy density, it can be fully charged in just five minutes, with
+a design life of up to 100,000 cycles, and the capacity retains over 99% at -30°C and 100°C.
+(HUAB)
+
+(Official website: https://www.donutlab.com/)
+(News: https://www.electronicspecifier.com/products/power/donut-lab-introduces-slid-state-
+battery-to-power-production-vehicles-at-ces/)
+
+Best regards,
+
+M. Fenner
+
+## Source: market-rep_8_20260308.docx
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_8_20260308.docx
+- source_ext: .docx
+- parser_used: Docx2txtLoader
+- fallback_used: False
+- parse_status: success
+- extracted_chars: 3418
+
+### Segment 1
+
+UBGS I&C Sales Visit Report
+
+KAM_HUFR_Technimark / Date: 28th Jan, 2026
+
+CN Team: Consumer
+
+Team Region: CCN
+
+Top Applications: Yes
+
+====================================================
+
+Visit & Account Information
+
+Customer Name: Technimark Precision Molding (Suzhou) Co., Ltd.
+
+Contact Person(s): Mrs. Petrel Li
+
+Contact Person(s) Role: Procurement
+
+Attendees (Customer): Mrs. Petrel Li
+
+Attendees (EMS): Andre Sutter, Frank Hu
+
+Target Customer Yes
+
+Visit Type Commercial Issues
+
+Specific Requirements Description for Projects
+
+Project Block (repeat for Project 1, Project 2, …)
+
+Project 1 Overview
+
+Project Name: G21 and XS 1421.1 for BacT culture bottle
+
+Customer OEM: Bio Merieux
+
+Tier 1:
+
+Molder names: Technimark Suzhou
+
+Application: blood culture
+
+MR No
+
+EMS Material PFAM G21
+
+If Other (details):
+
+Full EMS Material name (if defined): Grivory G21 Nat, XS 1421.1 Nat
+
+Current Material
+
+Part Description / Short description of component & function O2 barrier bottle
+
+Project Status P
+
+SOP Date (YYYY-MM): 2026-12
+
+Project 1 Business Data
+
+Potential [t/a] : 130
+
+Estimated Annual Part Volume (pcs/year):
+
+Current Materials Used:
+
+Target Price [CNY/kg]:
+
+Target Part Cost vs Metal (e.g. “–15% total cost vs metal”): ________________________________
+
+Competitor (Material / Supplier) Name of competitor & grade : _________No_______________
+
+Competitor’s Price [CNY/kg]:
+
+________________________________
+
+Target Positioning vs Competitor (e.g. “same price, better performance”; “higher price, weight -30%”):___________________________________
+
+__________________________________________________________
+
+Project 1 – Technical Requirements & CATS Needs
+
+FDA contact approval
+
+CATS Required No
+
+Tooling Status New Tool Planned
+
+Project 1 - Customer Requirements Description
+
+Function & performance expectations
+
+Oxygen barrier, transparency
+
+Risks / Concerns from Customer (e.g. “fear of creep”, “appearance issues”, “tooling cost”, “approval time”)
+
+Project 1 – Next Actions
+
+Action
+
+Responsible
+
+/ Date (YYYY-MM-DD)
+
+Confirm the supply source of G21 from NA for first order
+
+HUFR
+
+Before CNY
+
+Update CIF price of G21 and XS 1421.1 and MOQ
+
+HUFR
+
+Before CNY
+
+Other Remarks
+
+Petrel confirmed that they will only take G21 from NA soruce for their first trial run order. She said that they have to follow current process of Technimark US completely since Bio Merieux did not formally inform them to use G21 from Switzerland.
+
+They will go through two routes simultaneously, one is to use G21 from NA source for first order. At same time, confirming with end customer about G21 from Switzerland. But she highlight that they must need to take G21 from NA at first.
+
+Petrel also expect to use materials from Switzerland since the traiff from US to CN is 20% for G21.
+
+Petrel gave forecast about G21 and XS 1421.1 in 2026 and 2027:
+
+2026 G21: 7.5~8t/a, XS 1421.1 550kg/a 1million pcs bottle
+
+2027 G21: 110~120t/a, XS 1421.1 8t/a 14million pcs bottle
+
+Petrel asked to update CIF quotation and MOQ since the materials will be shipped from NA.
+
+Petrel said if all topics are confirmed, they expected to place first sample trial order before CNY. And she asked to have different batches of both grades for first order.
+
+The project is on schedule that the equipment is estimated to install at end of June and process adjustment completion at mid of July. They expect raw materials get ready with same time of the equipment.
+
+2
+
+## Source: market-rep_9_20260308.docx
+- source_path: /home/gabri/udemy/llm_engineering/myRAG_knowledge_index/market-rep/market-rep_9_20260308.docx
 - source_ext: .docx
 - parser_used: Docx2txtLoader
 - fallback_used: False

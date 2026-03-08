@@ -146,6 +146,36 @@ Inspect:
 bash myRAG_app/skills/parsing-output-guardian/scripts/inspect_vectorstore.sh --sample 5
 ```
 
+Markdown-first alternative wrapper (index rebuild + markdown export + markdown ingest):
+```bash
+bash myRAG_app/skills/parsing-output-guardian/scripts/build_vectorstore_markdown_first.sh \
+  --index-mode full \
+  --tracking-path /tmp/myrag_knowledge_index_tracking.csv \
+  --strict-export ; echo "exit=$?"
+```
+
+Build candidate only (no promotion):
+```bash
+bash myRAG_app/skills/parsing-output-guardian/scripts/build_vectorstore_markdown_first.sh \
+  --index-mode full \
+  --tracking-path /tmp/myrag_knowledge_index_tracking.csv \
+  --strict-export \
+  --build-only ; echo "exit=$?"
+```
+
+Incremental index mode (only new/changed source files re-copied into indexed root):
+```bash
+bash myRAG_app/skills/parsing-output-guardian/scripts/build_vectorstore_markdown_first.sh \
+  --index-mode incremental \
+  --index-state-path /home/gabri/udemy/llm_engineering/myRAG_app/.state/knowledge_index_state.json \
+  --tracking-path /tmp/myrag_knowledge_index_tracking.csv \
+  --strict-export ; echo "exit=$?"
+```
+
+Tracking file download-ready location:
+`/tmp/myrag_knowledge_index_tracking.csv`
+It contains all current source files with original and indexed names.
+
 ## 10) Verify New PPTX Chunks Exist
 ```bash
 set -a; source .env; set +a
@@ -187,3 +217,8 @@ bash myRAG_app/deploy/scripts/rollback_vector_db.sh \
 ```
 
 This is the default production-safe path after any new raw file is added.
+
+If you prefer markdown-first as default:
+1. Run Step 1 (build indexed source).
+2. Run Step 9 markdown-first wrapper.
+3. Verify with inspect and `/api/health`.
