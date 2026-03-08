@@ -4,16 +4,24 @@ import argparse
 import os
 import time
 from pathlib import Path
+from uuid import uuid4
 
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from myRAG_app.api.schemas import (
+    CreateThreadRequest,
+    CreateThreadResponse,
+    DeleteThreadResponse,
+    GetThreadMessagesResponse,
     HealthResponse,
+    ListThreadsResponse,
     QueryMeta,
     QueryRequest,
     QueryResponse,
+    RenameThreadRequest,
+    RenameThreadResponse,
     RetrievalOptions,
     SourceRef,
     StructuredAnswer,
@@ -69,6 +77,176 @@ def create_app() -> FastAPI:
             threads_db=memory_health.get("db_name"),
             thread_memory_error=memory_health.get("last_error"),
         )
+
+    def _thread_memory_unavailable(detail_message: str) -> HTTPException:
+        return HTTPException(
+            status_code=503,
+            detail={
+                "error": "thread_memory_unavailable",
+                "message": detail_message,
+            },
+        )
+
+    def _require_thread_memory_ready() -> None:
+        memory_health = thread_memory_store.health()
+        if not bool(memory_health.get("enabled", False)):
+            raise _thread_memory_unavailable("Thread memory backend is disabled.")
+        if not bool(memory_health.get("ready", False)):
+            message = str(memory_health.get("last_error") or "Thread memory backend is not ready.")
+            raise _thread_memory_unavailable(message)
+
+    @app.get("/api/threads", response_model=ListThreadsResponse)
+    def list_threads(
+        username: str = Query(..., min_length=1),
+        limit: int = Query(50, ge=1, le=200),
+    ) -> ListThreadsResponse:
+        clean_username = username.strip()
+        if not clean_username:
+            raise HTTPException(
+                status_code=400,
+                detail={"error": "invalid_username", "message": "username must not be blank"},
+            )
+        _require_thread_memory_ready()
+        try:
+            threads = thread_memory_store.list_threads(username=clean_username, limit=limit)
+        except RuntimeError as exc:
+            raise _thread_memory_unavailable(str(exc)) from exc
+        return ListThreadsResponse(threads=threads)
+
+    @app.post("/api/threads", response_model=CreateThreadResponse)
+    def create_thread(payload: CreateThreadRequest) -> CreateThreadResponse:
+        clean_username = payload.username.strip()
+        clean_thread_id = (payload.thread_id or "").strip() or str(uuid4())
+        thread_title = (payload.title or "").strip() or "New Thread"
+        if not clean_username:
+            raise HTTPException(
+                status_code=400,
+                detail={"error": "invalid_username", "message": "username must not be blank"},
+            )
+        _require_thread_memory_ready()
+        try:
+            thread = thread_memory_store.create_thread(
+                username=clean_username,
+                thread_id=clean_thread_id,
+                title=thread_title,
+            )
+        except RuntimeError as exc:
+            raise _thread_memory_unavailable(str(exc)) from exc
+        return CreateThreadResponse(thread=thread)
+
+    @app.get("/api/threads/{thread_id}/messages", response_model=GetThreadMessagesResponse)
+    def get_thread_messages(
+        thread_id: str,
+        username: str = Query(..., min_length=1),
+        limit: int = Query(500, ge=1, le=1000),
+    ) -> GetThreadMessagesResponse:
+        clean_username = username.strip()
+        clean_thread_id = thread_id.strip()
+        if not clean_username:
+            raise HTTPException(
+                status_code=400,
+                detail={"error": "invalid_username", "message": "username must not be blank"},
+            )
+        if not clean_thread_id:
+            raise HTTPException(
+                status_code=400,
+                detail={"error": "invalid_thread_id", "message": "thread_id must not be blank"},
+            )
+        _require_thread_memory_ready()
+        try:
+            result = thread_memory_store.get_thread_messages(
+                username=clean_username,
+                thread_id=clean_thread_id,
+                limit=limit,
+            )
+        except RuntimeError as exc:
+            raise _thread_memory_unavailable(str(exc)) from exc
+        if result is None:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "thread_not_found",
+                    "message": f"Thread '{clean_thread_id}' was not found for user '{clean_username}'.",
+                },
+            )
+        return GetThreadMessagesResponse(thread=result["thread"], messages=result["messages"])
+
+    @app.patch("/api/threads/{thread_id}", response_model=RenameThreadResponse)
+    def rename_thread(
+        thread_id: str,
+        payload: RenameThreadRequest,
+    ) -> RenameThreadResponse:
+        clean_thread_id = thread_id.strip()
+        clean_username = payload.username.strip()
+        clean_title = payload.title.strip()
+        if not clean_thread_id:
+            raise HTTPException(
+                status_code=400,
+                detail={"error": "invalid_thread_id", "message": "thread_id must not be blank"},
+            )
+        if not clean_username:
+            raise HTTPException(
+                status_code=400,
+                detail={"error": "invalid_username", "message": "username must not be blank"},
+            )
+        if not clean_title:
+            raise HTTPException(
+                status_code=400,
+                detail={"error": "invalid_title", "message": "title must not be blank"},
+            )
+        _require_thread_memory_ready()
+        try:
+            thread = thread_memory_store.rename_thread(
+                username=clean_username,
+                thread_id=clean_thread_id,
+                title=clean_title,
+            )
+        except RuntimeError as exc:
+            raise _thread_memory_unavailable(str(exc)) from exc
+        if thread is None:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "thread_not_found",
+                    "message": f"Thread '{clean_thread_id}' was not found for user '{clean_username}'.",
+                },
+            )
+        return RenameThreadResponse(thread=thread)
+
+    @app.delete("/api/threads/{thread_id}", response_model=DeleteThreadResponse)
+    def delete_thread(
+        thread_id: str,
+        username: str = Query(..., min_length=1),
+    ) -> DeleteThreadResponse:
+        clean_thread_id = thread_id.strip()
+        clean_username = username.strip()
+        if not clean_thread_id:
+            raise HTTPException(
+                status_code=400,
+                detail={"error": "invalid_thread_id", "message": "thread_id must not be blank"},
+            )
+        if not clean_username:
+            raise HTTPException(
+                status_code=400,
+                detail={"error": "invalid_username", "message": "username must not be blank"},
+            )
+        _require_thread_memory_ready()
+        try:
+            deleted = thread_memory_store.delete_thread(
+                username=clean_username,
+                thread_id=clean_thread_id,
+            )
+        except RuntimeError as exc:
+            raise _thread_memory_unavailable(str(exc)) from exc
+        if not deleted:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "thread_not_found",
+                    "message": f"Thread '{clean_thread_id}' was not found for user '{clean_username}'.",
+                },
+            )
+        return DeleteThreadResponse(deleted=True, thread_id=clean_thread_id)
 
     @app.post("/api/rag/query", response_model=QueryResponse)
     def query_rag(payload: QueryRequest) -> QueryResponse:

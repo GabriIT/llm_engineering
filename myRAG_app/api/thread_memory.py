@@ -239,6 +239,7 @@ class ThreadMemoryStore:
         thread_id: str,
         title: str,
     ) -> None:
+        normalized_title = (title or "").strip() or "New Thread"
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -247,10 +248,292 @@ class ThreadMemoryStore:
                 ON CONFLICT (username, thread_id)
                 DO UPDATE SET
                   updated_at = now(),
-                  title = COALESCE(myrag_thread_sessions.title, EXCLUDED.title)
+                  title = CASE
+                    WHEN myrag_thread_sessions.title IS NULL
+                      OR btrim(myrag_thread_sessions.title) = ''
+                      OR myrag_thread_sessions.title = 'New Thread'
+                    THEN COALESCE(NULLIF(btrim(EXCLUDED.title), ''), 'New Thread')
+                    ELSE myrag_thread_sessions.title
+                  END
                 """,
-                (username, thread_id, title),
+                (username, thread_id, normalized_title),
             )
+
+    @staticmethod
+    def _normalize_title(value: str | None) -> str:
+        clean = (value or "").strip()
+        return clean or "New Thread"
+
+    @staticmethod
+    def _summary_from_row(row: Any) -> dict[str, Any]:
+        return {
+            "thread_id": str(row[0]),
+            "title": ThreadMemoryStore._normalize_title(str(row[1]) if row[1] is not None else None),
+            "created_at": row[2],
+            "updated_at": row[3],
+            "message_count": int(row[4] or 0),
+            "last_message_preview": str(row[5]) if row[5] is not None else None,
+        }
+
+    @staticmethod
+    def _coerce_metadata_dict(raw: Any) -> dict[str, Any]:
+        if raw is None:
+            return {}
+        if isinstance(raw, dict):
+            return raw
+        if isinstance(raw, str):
+            try:
+                parsed = json.loads(raw)
+            except Exception:
+                return {}
+            return parsed if isinstance(parsed, dict) else {}
+        return {}
+
+    @staticmethod
+    def _coerce_sources(raw: Any) -> list[dict[str, Any]]:
+        if not isinstance(raw, list):
+            return []
+        sources: list[dict[str, Any]] = []
+        for item in raw:
+            if not isinstance(item, dict):
+                continue
+            sources.append(
+                {
+                    "source": str(item.get("source", "unknown")),
+                    "source_name": str(item.get("source_name", "unknown")),
+                    "doc_type": str(item.get("doc_type", "unknown")),
+                    "page_number": item.get("page_number"),
+                    "sheet_name": item.get("sheet_name"),
+                }
+            )
+        return sources
+
+    @staticmethod
+    def _coerce_structured(raw: Any, fallback_content: str) -> dict[str, Any] | None:
+        if not isinstance(raw, dict):
+            return None
+        prompt = str(raw.get("prompt", "")).strip()
+        answer_text = str(raw.get("answer_text", "")).strip()
+        bullets_raw = raw.get("bullets")
+        bullets: list[str] = []
+        if isinstance(bullets_raw, list):
+            bullets = [str(item).strip() for item in bullets_raw if str(item).strip()]
+        if not prompt and not answer_text and not bullets:
+            return None
+        return {
+            "prompt": prompt or "Thread follow-up",
+            "bullets": bullets,
+            "answer_text": answer_text or fallback_content,
+        }
+
+    def list_threads(self, *, username: str, limit: int = 50) -> list[dict[str, Any]]:
+        if not self.ensure_schema():
+            raise RuntimeError("Thread memory schema is not ready.")
+        capped_limit = max(1, min(200, int(limit)))
+        try:
+            with self._connect() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        SELECT
+                          s.thread_id,
+                          COALESCE(NULLIF(btrim(s.title), ''), 'New Thread') AS title,
+                          s.created_at,
+                          s.updated_at,
+                          (
+                            SELECT count(*)::int
+                            FROM myrag_thread_messages m
+                            WHERE m.username = s.username
+                              AND m.thread_id = s.thread_id
+                          ) AS message_count,
+                          (
+                            SELECT left(m2.content, 180)
+                            FROM myrag_thread_messages m2
+                            WHERE m2.username = s.username
+                              AND m2.thread_id = s.thread_id
+                            ORDER BY m2.created_at DESC, m2.id DESC
+                            LIMIT 1
+                          ) AS last_message_preview
+                        FROM myrag_thread_sessions s
+                        WHERE s.username = %s
+                        ORDER BY s.updated_at DESC, s.created_at DESC
+                        LIMIT %s
+                        """,
+                        (username, capped_limit),
+                    )
+                    rows = cur.fetchall()
+            return [self._summary_from_row(row) for row in rows]
+        except Exception as exc:  # pragma: no cover - depends on DB runtime
+            raise RuntimeError(f"Failed to list threads: {exc}") from exc
+
+    def get_thread_summary(self, *, username: str, thread_id: str) -> dict[str, Any] | None:
+        if not self.ensure_schema():
+            raise RuntimeError("Thread memory schema is not ready.")
+        try:
+            with self._connect() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        SELECT
+                          s.thread_id,
+                          COALESCE(NULLIF(btrim(s.title), ''), 'New Thread') AS title,
+                          s.created_at,
+                          s.updated_at,
+                          (
+                            SELECT count(*)::int
+                            FROM myrag_thread_messages m
+                            WHERE m.username = s.username
+                              AND m.thread_id = s.thread_id
+                          ) AS message_count,
+                          (
+                            SELECT left(m2.content, 180)
+                            FROM myrag_thread_messages m2
+                            WHERE m2.username = s.username
+                              AND m2.thread_id = s.thread_id
+                            ORDER BY m2.created_at DESC, m2.id DESC
+                            LIMIT 1
+                          ) AS last_message_preview
+                        FROM myrag_thread_sessions s
+                        WHERE s.username = %s
+                          AND s.thread_id = %s
+                        LIMIT 1
+                        """,
+                        (username, thread_id),
+                    )
+                    row = cur.fetchone()
+            if row is None:
+                return None
+            return self._summary_from_row(row)
+        except Exception as exc:  # pragma: no cover - depends on DB runtime
+            raise RuntimeError(f"Failed to get thread summary: {exc}") from exc
+
+    def create_thread(
+        self,
+        *,
+        username: str,
+        thread_id: str,
+        title: str | None = None,
+    ) -> dict[str, Any]:
+        if not self.ensure_schema():
+            raise RuntimeError("Thread memory schema is not ready.")
+        thread_title = self._normalize_title(title)
+        try:
+            with self._connect() as conn:
+                self._upsert_thread(
+                    conn=conn,
+                    username=username,
+                    thread_id=thread_id,
+                    title=thread_title,
+                )
+            summary = self.get_thread_summary(username=username, thread_id=thread_id)
+            if summary is None:
+                raise RuntimeError("Thread was not found after creation.")
+            return summary
+        except Exception as exc:  # pragma: no cover - depends on DB runtime
+            if isinstance(exc, RuntimeError):
+                raise
+            raise RuntimeError(f"Failed to create thread: {exc}") from exc
+
+    def rename_thread(
+        self,
+        *,
+        username: str,
+        thread_id: str,
+        title: str,
+    ) -> dict[str, Any] | None:
+        if not self.ensure_schema():
+            raise RuntimeError("Thread memory schema is not ready.")
+        new_title = self._normalize_title(title)
+        try:
+            with self._connect() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        UPDATE myrag_thread_sessions
+                        SET title = %s,
+                            updated_at = now()
+                        WHERE username = %s
+                          AND thread_id = %s
+                        """,
+                        (new_title, username, thread_id),
+                    )
+            return self.get_thread_summary(username=username, thread_id=thread_id)
+        except Exception as exc:  # pragma: no cover - depends on DB runtime
+            if isinstance(exc, RuntimeError):
+                raise
+            raise RuntimeError(f"Failed to rename thread: {exc}") from exc
+
+    def delete_thread(
+        self,
+        *,
+        username: str,
+        thread_id: str,
+    ) -> bool:
+        if not self.ensure_schema():
+            raise RuntimeError("Thread memory schema is not ready.")
+        try:
+            with self._connect() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        DELETE FROM myrag_thread_sessions
+                        WHERE username = %s
+                          AND thread_id = %s
+                        """,
+                        (username, thread_id),
+                    )
+                    deleted_count = int(cur.rowcount or 0)
+            return deleted_count > 0
+        except Exception as exc:  # pragma: no cover - depends on DB runtime
+            raise RuntimeError(f"Failed to delete thread: {exc}") from exc
+
+    def get_thread_messages(
+        self,
+        *,
+        username: str,
+        thread_id: str,
+        limit: int = 500,
+    ) -> dict[str, Any] | None:
+        if not self.ensure_schema():
+            raise RuntimeError("Thread memory schema is not ready.")
+        capped_limit = max(1, min(1000, int(limit)))
+        summary = self.get_thread_summary(username=username, thread_id=thread_id)
+        if summary is None:
+            return None
+        try:
+            with self._connect() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        SELECT id, role, content, created_at, metadata
+                        FROM myrag_thread_messages
+                        WHERE username = %s
+                          AND thread_id = %s
+                        ORDER BY created_at ASC, id ASC
+                        LIMIT %s
+                        """,
+                        (username, thread_id, capped_limit),
+                    )
+                    rows = cur.fetchall()
+            messages: list[dict[str, Any]] = []
+            for row in rows:
+                metadata = self._coerce_metadata_dict(row[4])
+                message: dict[str, Any] = {
+                    "id": int(row[0]),
+                    "role": str(row[1]),
+                    "content": str(row[2]),
+                    "created_at": row[3],
+                    "sources": [],
+                }
+                if str(row[1]) == "assistant":
+                    structured = self._coerce_structured(metadata.get("structured"), str(row[2]))
+                    if structured is not None:
+                        message["structured"] = structured
+                    message["sources"] = self._coerce_sources(metadata.get("sources"))
+                messages.append(message)
+            return {"thread": summary, "messages": messages}
+        except Exception as exc:  # pragma: no cover - depends on DB runtime
+            raise RuntimeError(f"Failed to get thread messages: {exc}") from exc
 
     def _insert_message(
         self,

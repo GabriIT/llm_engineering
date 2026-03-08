@@ -121,6 +121,29 @@ Server behavior:
 3. Calls LLM with that memory context.
 4. Persists current user question + assistant response back to DB.
 
+Thread list/history are now backend-authoritative:
+1. `GET /api/threads?username=<name>&limit=<int>` for sidebar.
+2. `POST /api/threads` when creating a new thread.
+3. `GET /api/threads/{thread_id}/messages?username=<name>&limit=<int>` for full thread history.
+4. `PATCH /api/threads/{thread_id}` to rename thread title.
+5. `DELETE /api/threads/{thread_id}?username=<name>` to remove thread + messages.
+
+Quick checks:
+```bash
+curl -s "http://localhost:8000/api/threads?username=alice&limit=20" | jq .
+curl -s -X POST "http://localhost:8000/api/threads" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","title":"New Thread"}' | jq .
+curl -s "http://localhost:8000/api/threads/<thread_id>/messages?username=alice&limit=200" | jq .
+curl -s -X PATCH "http://localhost:8000/api/threads/<thread_id>" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","title":"Renamed Thread"}' | jq .
+curl -s -X DELETE "http://localhost:8000/api/threads/<thread_id>?username=alice" | jq .
+```
+
+Because thread list/messages come from PostgreSQL, the same username can see the same
+history across different browsers/devices (assuming they reach the same backend DB).
+
 ## 3) Inspect Stored Dialog in PostgreSQL
 ```bash
 PGPASSWORD=postgresql psql -h 127.0.0.1 -U postgresql -d myRAG_threads -c \

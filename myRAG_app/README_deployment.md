@@ -86,7 +86,17 @@ Then redeploy and verify:
 cd /home/ubuntu/myrag-deploy
 bash myRAG_app/deploy/scripts/deploy_compose.sh
 curl -s http://127.0.0.1:18000/api/health
+curl -s "http://127.0.0.1:18000/api/threads?username=alice&limit=20"
+curl -s -X PATCH "http://127.0.0.1:18000/api/threads/<thread_id>" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","title":"Renamed Thread"}'
+curl -s -X DELETE "http://127.0.0.1:18000/api/threads/<thread_id>?username=alice"
 ```
+
+Expected:
+1. `/api/health` reports `thread_memory_enabled=true` and `thread_memory_ready=true`.
+2. `/api/threads` returns JSON instead of `503`.
+3. Cross-browser shared thread lists/history work only when this backend thread memory is healthy.
 
 ## Fast Update (Existing VPS Deployment)
 

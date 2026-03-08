@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
 import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -33,6 +34,277 @@ class ApiServerTests(unittest.TestCase):
         self.assertEqual(len(cors_middlewares), 1)
         allow_origins = cors_middlewares[0].kwargs.get("allow_origins", [])
         self.assertEqual(allow_origins, ["http://154.12.245.254", "http://example.com"])
+
+    def test_list_threads_success(self) -> None:
+        now = datetime.now(timezone.utc)
+        fake_store = SimpleNamespace(
+            enabled=True,
+            health=lambda: {
+                "enabled": True,
+                "ready": True,
+                "db_name": "myRAG_threads",
+                "last_error": None,
+            },
+            list_threads=lambda **_: [
+                {
+                    "thread_id": "thread-1",
+                    "title": "First thread",
+                    "created_at": now,
+                    "updated_at": now,
+                    "message_count": 2,
+                    "last_message_preview": "Latest answer",
+                }
+            ],
+        )
+        with patch("myRAG_app.api.server.create_thread_memory_store_from_env", return_value=fake_store):
+            app = create_app()
+            client = TestClient(app)
+            response = client.get("/api/threads", params={"username": "alice", "limit": 10})
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(len(payload["threads"]), 1)
+        self.assertEqual(payload["threads"][0]["thread_id"], "thread-1")
+        self.assertEqual(payload["threads"][0]["message_count"], 2)
+
+    def test_create_thread_success(self) -> None:
+        now = datetime.now(timezone.utc)
+        fake_store = SimpleNamespace(
+            enabled=True,
+            health=lambda: {
+                "enabled": True,
+                "ready": True,
+                "db_name": "myRAG_threads",
+                "last_error": None,
+            },
+            create_thread=lambda **_: {
+                "thread_id": "thread-new",
+                "title": "New Thread",
+                "created_at": now,
+                "updated_at": now,
+                "message_count": 0,
+                "last_message_preview": None,
+            },
+        )
+        with patch("myRAG_app.api.server.create_thread_memory_store_from_env", return_value=fake_store):
+            app = create_app()
+            client = TestClient(app)
+            response = client.post(
+                "/api/threads",
+                json={"username": "alice"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["thread"]["thread_id"], "thread-new")
+        self.assertEqual(payload["thread"]["message_count"], 0)
+
+    def test_get_thread_messages_success(self) -> None:
+        now = datetime.now(timezone.utc)
+        fake_store = SimpleNamespace(
+            enabled=True,
+            health=lambda: {
+                "enabled": True,
+                "ready": True,
+                "db_name": "myRAG_threads",
+                "last_error": None,
+            },
+            get_thread_messages=lambda **_: {
+                "thread": {
+                    "thread_id": "thread-1",
+                    "title": "First thread",
+                    "created_at": now,
+                    "updated_at": now,
+                    "message_count": 2,
+                    "last_message_preview": "latest",
+                },
+                "messages": [
+                    {
+                        "id": 1,
+                        "role": "user",
+                        "content": "question",
+                        "created_at": now,
+                        "sources": [],
+                    },
+                    {
+                        "id": 2,
+                        "role": "assistant",
+                        "content": "answer",
+                        "created_at": now,
+                        "structured": {
+                            "prompt": "question",
+                            "bullets": ["point"],
+                            "answer_text": "answer",
+                        },
+                        "sources": [
+                            {
+                                "source": "/tmp/doc.pdf",
+                                "source_name": "doc.pdf",
+                                "doc_type": "Certifications",
+                            }
+                        ],
+                    },
+                ],
+            },
+        )
+        with patch("myRAG_app.api.server.create_thread_memory_store_from_env", return_value=fake_store):
+            app = create_app()
+            client = TestClient(app)
+            response = client.get(
+                "/api/threads/thread-1/messages",
+                params={"username": "alice"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["thread"]["thread_id"], "thread-1")
+        self.assertEqual(len(payload["messages"]), 2)
+        self.assertEqual(payload["messages"][1]["role"], "assistant")
+        self.assertEqual(payload["messages"][1]["structured"]["prompt"], "question")
+        self.assertEqual(payload["messages"][1]["sources"][0]["source_name"], "doc.pdf")
+
+    def test_thread_endpoints_return_503_when_thread_memory_unavailable(self) -> None:
+        fake_store = SimpleNamespace(
+            enabled=False,
+            health=lambda: {
+                "enabled": False,
+                "ready": False,
+                "db_name": "myRAG_threads",
+                "last_error": None,
+            },
+        )
+        with patch("myRAG_app.api.server.create_thread_memory_store_from_env", return_value=fake_store):
+            app = create_app()
+            client = TestClient(app)
+            response = client.get("/api/threads", params={"username": "alice"})
+
+        self.assertEqual(response.status_code, 503)
+        payload = response.json()
+        self.assertEqual(payload["detail"]["error"], "thread_memory_unavailable")
+
+    def test_get_thread_messages_returns_404_when_thread_not_found(self) -> None:
+        fake_store = SimpleNamespace(
+            enabled=True,
+            health=lambda: {
+                "enabled": True,
+                "ready": True,
+                "db_name": "myRAG_threads",
+                "last_error": None,
+            },
+            get_thread_messages=lambda **_: None,
+        )
+        with patch("myRAG_app.api.server.create_thread_memory_store_from_env", return_value=fake_store):
+            app = create_app()
+            client = TestClient(app)
+            response = client.get(
+                "/api/threads/missing/messages",
+                params={"username": "alice"},
+            )
+
+        self.assertEqual(response.status_code, 404)
+        payload = response.json()
+        self.assertEqual(payload["detail"]["error"], "thread_not_found")
+
+    def test_rename_thread_success(self) -> None:
+        now = datetime.now(timezone.utc)
+        fake_store = SimpleNamespace(
+            enabled=True,
+            health=lambda: {
+                "enabled": True,
+                "ready": True,
+                "db_name": "myRAG_threads",
+                "last_error": None,
+            },
+            rename_thread=lambda **_: {
+                "thread_id": "thread-1",
+                "title": "Renamed thread",
+                "created_at": now,
+                "updated_at": now,
+                "message_count": 5,
+                "last_message_preview": "latest",
+            },
+        )
+        with patch("myRAG_app.api.server.create_thread_memory_store_from_env", return_value=fake_store):
+            app = create_app()
+            client = TestClient(app)
+            response = client.patch(
+                "/api/threads/thread-1",
+                json={"username": "alice", "title": "Renamed thread"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["thread"]["thread_id"], "thread-1")
+        self.assertEqual(payload["thread"]["title"], "Renamed thread")
+
+    def test_rename_thread_returns_404_when_missing(self) -> None:
+        fake_store = SimpleNamespace(
+            enabled=True,
+            health=lambda: {
+                "enabled": True,
+                "ready": True,
+                "db_name": "myRAG_threads",
+                "last_error": None,
+            },
+            rename_thread=lambda **_: None,
+        )
+        with patch("myRAG_app.api.server.create_thread_memory_store_from_env", return_value=fake_store):
+            app = create_app()
+            client = TestClient(app)
+            response = client.patch(
+                "/api/threads/thread-missing",
+                json={"username": "alice", "title": "Whatever"},
+            )
+        self.assertEqual(response.status_code, 404)
+        payload = response.json()
+        self.assertEqual(payload["detail"]["error"], "thread_not_found")
+
+    def test_delete_thread_success(self) -> None:
+        fake_store = SimpleNamespace(
+            enabled=True,
+            health=lambda: {
+                "enabled": True,
+                "ready": True,
+                "db_name": "myRAG_threads",
+                "last_error": None,
+            },
+            delete_thread=lambda **_: True,
+        )
+        with patch("myRAG_app.api.server.create_thread_memory_store_from_env", return_value=fake_store):
+            app = create_app()
+            client = TestClient(app)
+            response = client.delete(
+                "/api/threads/thread-1",
+                params={"username": "alice"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertTrue(payload["deleted"])
+        self.assertEqual(payload["thread_id"], "thread-1")
+
+    def test_delete_thread_returns_404_when_missing(self) -> None:
+        fake_store = SimpleNamespace(
+            enabled=True,
+            health=lambda: {
+                "enabled": True,
+                "ready": True,
+                "db_name": "myRAG_threads",
+                "last_error": None,
+            },
+            delete_thread=lambda **_: False,
+        )
+        with patch("myRAG_app.api.server.create_thread_memory_store_from_env", return_value=fake_store):
+            app = create_app()
+            client = TestClient(app)
+            response = client.delete(
+                "/api/threads/missing",
+                params={"username": "alice"},
+            )
+
+        self.assertEqual(response.status_code, 404)
+        payload = response.json()
+        self.assertEqual(payload["detail"]["error"], "thread_not_found")
 
     @patch("myRAG_app.api.server.answer_question_structured")
     def test_query_success(self, mock_answer_question_structured) -> None:

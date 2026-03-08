@@ -451,7 +451,7 @@ This app now includes:
 `myRAG_app/api`
 2. A React + Vite + TypeScript frontend:
 `myRAG_app/ui`
-3. Local pseudo-auth + per-user local thread persistence.
+3. Local pseudo-auth + backend-authoritative thread persistence (PostgreSQL thread memory).
 4. UI chat-model selector with options:
 - `gpt-4.1-nano` (default)
 - `qwen3.5:9b` (Ollama)
@@ -463,7 +463,17 @@ Returns:
 - `status`
 - `collection`
 - `db_path`
-2. `POST /api/rag/query`
+2. `GET /api/threads?username=<name>&limit=<int>`
+Returns thread summaries for sidebar list.
+3. `POST /api/threads`
+Creates/upserts a thread shell for a username.
+4. `GET /api/threads/{thread_id}/messages?username=<name>&limit=<int>`
+Returns full thread history (messages + structured assistant payload + sources).
+5. `PATCH /api/threads/{thread_id}`
+Renames a thread title for a username.
+6. `DELETE /api/threads/{thread_id}?username=<name>`
+Deletes a thread and its messages.
+7. `POST /api/rag/query`
 Body:
 - `question`
 - `history` (optional)
@@ -477,6 +487,19 @@ Returns:
   - `answer_text`
 - `sources`
 - `meta`
+
+Thread API examples:
+```bash
+curl -s "http://localhost:8000/api/threads?username=alice&limit=20" | jq .
+curl -s -X POST "http://localhost:8000/api/threads" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","title":"New Thread"}' | jq .
+curl -s "http://localhost:8000/api/threads/<thread_id>/messages?username=alice&limit=200" | jq .
+curl -s -X PATCH "http://localhost:8000/api/threads/<thread_id>" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","title":"Renamed Thread"}' | jq .
+curl -s -X DELETE "http://localhost:8000/api/threads/<thread_id>?username=alice" | jq .
+```
 
 ### Install Dependencies
 From repo root:
@@ -577,14 +600,15 @@ npm run test:run
 
 ### UI Behavior Summary
 1. Register/login with local pseudo-auth (`localStorage` only).
-2. Left sidebar lists previous threads for current user.
-3. Main pane shows full multi-turn conversation for selected thread.
-4. Sending a query calls backend and appends assistant reply in this order:
+2. Left sidebar lists previous threads from backend for current user.
+3. Main pane shows full multi-turn conversation loaded from backend for selected thread.
+4. Sidebar supports `Rename` and `Delete` actions per thread.
+5. Sending a query calls backend and appends assistant reply in this order:
 - `Prompt`
 - `Answer` with bullet points and short paragraph
 - `Sources` list
-5. Refreshing the browser preserves user threads by username.
-6. Use the header toggle `Structured | Raw` to switch between formatted output and raw answer text for debugging/training review.
+6. Refreshing the browser (or switching browser) preserves threads for the same username, if PostgreSQL thread memory is enabled/ready.
+7. Use the header toggle `Structured | Raw` to switch between formatted output and raw answer text for debugging/training review.
 
 ## Deployment
 Use the dedicated deployment runbook:

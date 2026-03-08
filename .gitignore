@@ -226,3 +226,5 @@ myRAG_app/vector_db_candidate_*/
 myRAG_knowledge_index/
 samples-6-mar/
 myRAG_knowledge/
+vector_db_markdown/
+vector_db_markdown_backups/

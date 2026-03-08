@@ -178,6 +178,31 @@ select {
   width: 100%;
 }
 
+.selected-thread-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.thread-action-primary {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px 11px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.thread-action-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.selected-thread-menu {
+  display: flex;
+  gap: 8px;
+}
+
 .thread-list {
   list-style: none;
   margin: 0;
@@ -202,6 +227,22 @@ select {
 .thread-item.active {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(11, 110, 245, 0.14);
+}
+
+.thread-action-btn {
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.thread-action-btn.danger {
+  border-color: rgba(201, 58, 58, 0.35);
+  color: var(--danger);
 }
 
 .thread-title {

@@ -43,6 +43,9 @@ export interface QueryMeta {
   k: number;
   search_type: "similarity" | "mmr";
   elapsed_ms: number;
+  thread_memory_used?: boolean;
+  thread_memory_ready?: boolean | null;
+  thread_id?: string | null;
 }
 
 export interface QueryResponse {
@@ -50,4 +53,22 @@ export interface QueryResponse {
   structured?: StructuredAnswer;
   sources: SourceRef[];
   meta: QueryMeta;
+}
+
+export interface ThreadSummaryApi {
+  thread_id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+  message_count: number;
+  last_message_preview?: string | null;
+}
+
+export interface ThreadMessageApi {
+  id: number;
+  role: Role;
+  content: string;
+  created_at: string;
+  structured?: StructuredAnswer;
+  sources?: SourceRef[];
 }

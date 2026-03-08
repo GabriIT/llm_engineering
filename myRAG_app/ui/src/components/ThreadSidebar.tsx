@@ -1,3 +1,5 @@
+import { useMemo, useState } from "react";
+
 import type { ChatThread } from "../types";
 
 interface ThreadSidebarProps {
@@ -8,6 +10,8 @@ interface ThreadSidebarProps {
   onToggleMobile: () => void;
   onCreateThread: () => void;
   onSelectThread: (threadId: string) => void;
+  onRenameThread: (threadId: string, currentTitle: string) => void;
+  onDeleteThread: (threadId: string) => void;
   onLogout: () => void;
 }
 
@@ -24,10 +28,17 @@ export function ThreadSidebar({
   onToggleMobile,
   onCreateThread,
   onSelectThread,
+  onRenameThread,
+  onDeleteThread,
   onLogout,
 }: ThreadSidebarProps) {
+  const [actionsOpen, setActionsOpen] = useState(false);
   const sorted = [...threads].sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+  );
+  const selectedThread = useMemo(
+    () => sorted.find((thread) => thread.id === activeThreadId) ?? null,
+    [activeThreadId, sorted],
   );
 
   return (
@@ -53,13 +64,51 @@ export function ThreadSidebar({
         + New Thread
       </button>
 
+      <div className="selected-thread-actions">
+        <button
+          type="button"
+          className="thread-action-primary"
+          onClick={() => setActionsOpen((open) => !open)}
+          disabled={!selectedThread}
+        >
+          Selected Thread Actions
+        </button>
+        {actionsOpen && selectedThread ? (
+          <div className="selected-thread-menu">
+            <button
+              type="button"
+              className="thread-action-btn"
+              onClick={() => {
+                onRenameThread(selectedThread.id, selectedThread.title);
+                setActionsOpen(false);
+              }}
+            >
+              Rename
+            </button>
+            <button
+              type="button"
+              className="thread-action-btn danger"
+              onClick={() => {
+                onDeleteThread(selectedThread.id);
+                setActionsOpen(false);
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        ) : null}
+      </div>
+
       <ul className="thread-list">
         {sorted.map((thread) => (
           <li key={thread.id}>
             <button
               type="button"
               className={thread.id === activeThreadId ? "thread-item active" : "thread-item"}
-              onClick={() => onSelectThread(thread.id)}
+              onClick={() => {
+                onSelectThread(thread.id);
+                setActionsOpen(false);
+              }}
             >
               <span className="thread-title">{thread.title}</span>
               <span className="thread-time">{formatUpdatedAt(thread.updatedAt)}</span>

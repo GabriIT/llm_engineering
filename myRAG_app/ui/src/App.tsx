@@ -18,6 +18,8 @@ export default function App() {
     isSending,
     createThread,
     selectThread,
+    renameThread,
+    deleteThread,
     sendQuery,
   } = useThreads(currentUser);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -44,6 +46,8 @@ export default function App() {
           selectThread(threadId);
           setMobileSidebarOpen(false);
         }}
+        onRenameThread={renameThread}
+        onDeleteThread={deleteThread}
         onLogout={logout}
       />
 

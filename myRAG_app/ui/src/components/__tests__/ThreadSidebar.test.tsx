@@ -18,6 +18,8 @@ describe("ThreadSidebar", () => {
   it("sorts threads by updatedAt and supports select/new", () => {
     const onSelect = vi.fn();
     const onCreate = vi.fn();
+    const onRename = vi.fn();
+    const onDelete = vi.fn();
 
     render(
       <ThreadSidebar
@@ -31,6 +33,8 @@ describe("ThreadSidebar", () => {
         onToggleMobile={vi.fn()}
         onCreateThread={onCreate}
         onSelectThread={onSelect}
+        onRenameThread={onRename}
+        onDeleteThread={onDelete}
         onLogout={vi.fn()}
       />,
     );
@@ -44,5 +48,13 @@ describe("ThreadSidebar", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Older/ }));
     expect(onSelect).toHaveBeenCalledWith("old");
+
+    fireEvent.click(screen.getByRole("button", { name: "Selected Thread Actions" }));
+    fireEvent.click(screen.getByRole("button", { name: "Rename" }));
+    expect(onRename).toHaveBeenCalledWith("new", "Newest");
+
+    fireEvent.click(screen.getByRole("button", { name: "Selected Thread Actions" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete" }));
+    expect(onDelete).toHaveBeenCalledWith("new");
   });
 });
