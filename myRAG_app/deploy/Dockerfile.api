@@ -9,6 +9,7 @@ RUN pip install --no-cache-dir \
     fastapi \
     uvicorn \
     python-dotenv \
+    "psycopg[binary]" \
     langchain \
     langchain-core \
     langchain-openai \

@@ -2,6 +2,9 @@
 
 Target: `http://154.12.245.254/RAG-mat`
 
+For the Ubuntu 24.04 Gabri-specific step-by-step runbook, see:
+`myRAG_app/VPS_gabri_deploymentREADME.md`
+
 This runbook deploys `myRAG_app` with:
 1. Reverse-proxy path routing at `/RAG-mat`
 2. Docker Compose runtime (preferred)

@@ -10,6 +10,8 @@ services:
       MYRAG_DB_PATH: /data/vector_db
       MYRAG_COLLECTION: ${MYRAG_COLLECTION:-myrag_docs}
       MYRAG_ALLOWED_ORIGINS: ${MYRAG_ALLOWED_ORIGINS:-http://154.12.245.254}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ${MYRAG_DB_PATH:?set MYRAG_DB_PATH in .env.vps}:/data/vector_db
     ports:

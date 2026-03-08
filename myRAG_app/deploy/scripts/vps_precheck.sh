@@ -8,9 +8,15 @@ if [[ -f "$REPO_ROOT/.env" ]]; then
   source "$REPO_ROOT/.env"
   set +a
 fi
+# Prefer deployment env when available (VPS runtime configuration).
+if [[ -f "$REPO_ROOT/myRAG_app/deploy/.env.vps" ]]; then
+  set -a
+  source "$REPO_ROOT/myRAG_app/deploy/.env.vps"
+  set +a
+fi
 
-KNOWLEDGE_ROOT="/srv/myrag/myRAG_knowledge"
-VECTOR_DB_PATH="${MYRAG_DB_PATH:-/srv/myrag/vector_db}"
+KNOWLEDGE_ROOT="/home/$USER/myrag-deploy/myRAG_knowledge"
+VECTOR_DB_PATH="${MYRAG_DB_PATH:-/home/$USER/myrag-deploy/vector_db}"
 PYTHON_BIN="python3"
 OUTPUT="/tmp/myrag_vps_precheck_$(date +%Y%m%d_%H%M%S).log"
 
@@ -36,7 +42,7 @@ while [[ $# -gt 0 ]]; do
       cat <<USAGE
 Usage: vps_precheck.sh [options]
   --knowledge-root PATH   VPS path where myRAG_knowledge is/will be stored
-  --vector-db-path PATH   VPS path for Chroma vector_db (default: MYRAG_DB_PATH or /srv/myrag/vector_db)
+  --vector-db-path PATH   VPS path for Chroma vector_db (default: MYRAG_DB_PATH or /home/<user>/myrag-deploy/vector_db)
   --python-bin PATH       Python interpreter for dependency checks
   --output PATH           Output log path
 USAGE
@@ -106,6 +112,9 @@ else
   log "OS: $(uname -a)"
 fi
 
+log "--- apt sources (deb lines) ---"
+grep -R "^[[:space:]]*deb " /etc/apt/sources.list /etc/apt/sources.list.d/* 2>/dev/null | tee -a "$OUTPUT" || true
+
 if sudo -n true 2>/dev/null; then
   ok "sudo non-interactive access is available"
 else
@@ -136,6 +145,56 @@ for svc in nginx caddy apache2; do
     fi
   fi
 done
+
+if has_cmd node; then
+  node_ver="$(node -v 2>/dev/null || true)"
+  ok "node detected: $node_ver"
+else
+  warn "node not detected"
+fi
+
+if has_cmd npm; then
+  ok "npm detected: $(npm -v 2>/dev/null || echo unknown)"
+else
+  warn "npm not detected"
+fi
+
+if has_cmd pm2; then
+  log "--- pm2 list ---"
+  pm2 list 2>/dev/null | tee -a "$OUTPUT" || true
+else
+  log "pm2 not detected"
+fi
+
+if has_cmd apt-cache; then
+  log "--- apt policy nodejs ---"
+  apt-cache policy nodejs | tee -a "$OUTPUT" || true
+  log "--- apt rdepends --installed nodejs ---"
+  apt-cache rdepends --installed nodejs 2>/dev/null | tee -a "$OUTPUT" || true
+  log "--- apt policy postgresql/postgresql-15/postgresql-16 ---"
+  apt-cache policy postgresql postgresql-15 postgresql-16 | tee -a "$OUTPUT" || true
+  log "--- apt policy nginx ---"
+  apt-cache policy nginx | tee -a "$OUTPUT" || true
+fi
+
+if has_cmd psql; then
+  ok "psql detected: $(psql --version)"
+  log "--- pg_lsclusters ---"
+  pg_lsclusters 2>/dev/null | tee -a "$OUTPUT" || true
+else
+  warn "psql not detected"
+fi
+
+if has_cmd apt; then
+  log "--- installed postgresql packages ---"
+  apt list --installed 'postgresql*' 2>/dev/null | tee -a "$OUTPUT" || true
+fi
+
+if has_cmd nginx; then
+  log "nginx version: $(nginx -v 2>&1)"
+else
+  warn "nginx binary not found"
+fi
 
 if has_cmd ss; then
   log "--- listeners (80,443,18000,18001) ---"
@@ -244,8 +303,9 @@ else
 fi
 
 if has_cmd curl; then
-  if curl -sSf -m 6 https://api.openai.com >/dev/null; then
-    ok "basic outbound HTTPS connectivity to api.openai.com works"
+  http_code="$(curl -sS -o /dev/null -w '%{http_code}' -m 6 https://api.openai.com || true)"
+  if [[ -n "$http_code" && "$http_code" != "000" ]]; then
+    ok "basic outbound HTTPS connectivity to api.openai.com works (http_code=$http_code)"
   else
     warn "outbound HTTPS check to api.openai.com failed"
   fi

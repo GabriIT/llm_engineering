@@ -19,7 +19,7 @@ MODE="none"
 REMOTE_REPO_PATH=""
 REMOTE_PYTHON_BIN=".venv/bin/python"
 COLLECTION="${MYRAG_COLLECTION:-myrag_docs}"
-COMPOSE_PROJECT_DIR="/opt/myrag"
+COMPOSE_PROJECT_DIR=""
 COMPOSE_FILE="myRAG_app/deploy/docker-compose.yml"
 SYSTEMD_SERVICE="myrag-api"
 
@@ -83,6 +83,7 @@ Usage: copy_vector_db_from_local.sh --remote-host HOST --remote-db-path PATH [op
   --remote-repo-path PATH    If set, run remote inspect_cli after sync
   --remote-python-bin PATH   Remote python binary used for inspect_cli
   --collection NAME          Chroma collection for inspect (default: MYRAG_COLLECTION from .env or myrag_docs)
+  --compose-project-dir PATH Remote compose project root (default: --remote-repo-path or /home/<remote-user>/myrag-deploy)
 USAGE
       exit 0
       ;;
@@ -96,6 +97,14 @@ done
 if [[ -z "$REMOTE_HOST" || -z "$REMOTE_DB_PATH" ]]; then
   echo "--remote-host and --remote-db-path are required" >&2
   exit 2
+fi
+
+if [[ -z "$COMPOSE_PROJECT_DIR" ]]; then
+  if [[ -n "$REMOTE_REPO_PATH" ]]; then
+    COMPOSE_PROJECT_DIR="$REMOTE_REPO_PATH"
+  else
+    COMPOSE_PROJECT_DIR="/home/$REMOTE_USER/myrag-deploy"
+  fi
 fi
 
 if [[ ! -d "$LOCAL_DB_PATH" ]]; then
